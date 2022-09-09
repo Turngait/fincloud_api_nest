@@ -1,0 +1,61 @@
+version: '3.1'
+
+services:
+
+  # web:
+  #   image: nginx
+  #   container_name: my-notes-nginx
+  #   restart: always
+  #   ports:
+  #     - 8080:80
+
+  fc-api:
+    image: "node:18"
+    container_name: fc-api
+    working_dir: /home/node/app
+    volumes:
+      - ./app:/home/node/app
+    expose:
+      - "8081"
+    links:
+      - db
+      - fc-auth
+    command: npm run start:dev
+    environment:
+      - SALT=${SALT}
+      - SALT2=${SALT2}
+      - APP_NAME=${APP_NAME}
+      - API_KEY=${API_KEY}
+    ports:
+      - 8081:3000
+
+  fc-auth:
+    image: "node:18"
+    container_name: fc-auth
+    working_dir: /home/node/app
+    volumes:
+      - ./auth:/home/node/app
+    links:
+      - db
+    command: npm run start:dev
+    environment:
+      - SALT=${SALT}
+      - SALT2=${SALT2}
+      - APP_NAME=${APP_NAME}
+
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes: 
+      - ./db/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+  myadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    links: 
+      - db
+    ports:
+      - 8082:80
