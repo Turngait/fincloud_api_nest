@@ -26,6 +26,8 @@ services:
       - SALT2=${SALT2}
       - APP_NAME=${APP_NAME}
       - API_KEY=${API_KEY}
+      - DB_USERNAME=root
+      - DB_PASS=example
     ports:
       - 8081:3000
 
@@ -42,6 +44,8 @@ services:
       - SALT=${SALT}
       - SALT2=${SALT2}
       - APP_NAME=${APP_NAME}
+      - DB_USERNAME=root
+      - DB_PASS=example
 
   db:
     image: mysql:latest
