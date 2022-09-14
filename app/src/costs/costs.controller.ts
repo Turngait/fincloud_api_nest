@@ -7,6 +7,6 @@ export class CostsController {
 
   @Get('/test')
   async getTest() {
-    await this.costService.testCost();
+    return await this.costService.testCost();
   }
 }

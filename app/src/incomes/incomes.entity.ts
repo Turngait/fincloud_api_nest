@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export default class Cost {
+export default class Income {
   @PrimaryGeneratedColumn({ type: 'bigint' })
   id: number;
 
@@ -21,7 +21,7 @@ export default class Cost {
   date: Date;
 
   @Column('bigint')
-  group_id: number;
+  source_id: number;
 
   @Column('bigint')
   budget_id: number;
