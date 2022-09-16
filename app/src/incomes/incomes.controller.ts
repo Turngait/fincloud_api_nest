@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Delete, Get, Post } from '@nestjs/common';
 import { IncomesService } from './incomes.service';
 
 @Controller('incomes')
@@ -8,5 +8,15 @@ export class IncomesController {
   @Get('test')
   testFunc() {
     return this.incomesService.getTest();
+  }
+
+  @Post()
+  async addIncome() {
+    return 'Add income';
+  }
+
+  @Delete()
+  async deleteIncome() {
+    return 'Delete income';
   }
 }

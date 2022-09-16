@@ -1,4 +1,5 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Patch, Post, Body } from '@nestjs/common';
+import { UserDTO } from './users.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -8,5 +9,25 @@ export class UsersController {
   @Get('/test')
   getTest() {
     return this.userService.getTest();
+  }
+
+  @Post('/signin')
+  async signIn(@Body() dto: UserDTO) {
+    return await this.userService.signIn(dto.email, dto.pass);
+  }
+
+  @Post('/signup')
+  async regUser(@Body() dto: UserDTO) {
+    return await this.userService.addUser(dto.email, dto.pass, dto.name);
+  }
+
+  @Patch('/setdata')
+  async changeData() {
+    return 'changeData';
+  }
+
+  @Patch('/changepassword')
+  async changePass() {
+    return 'changePass';
   }
 }

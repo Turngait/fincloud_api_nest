@@ -9,12 +9,14 @@ import { IncomesModule } from './incomes/incomes.module';
 import { BudgetsModule } from './budgets/budgets.module';
 import { CostGroupModule } from './cost-group/cost-group.module';
 import { IncomeSourceModule } from './income-source/income-source.module';
+import { UserInfoModule } from './user-info/user-info.module';
 
 import CostEntity from './costs/costs.entity';
 import IncomeEntity from './incomes/incomes.entity';
 import BudgetEntity from './budgets/budgets.entity';
 import CostGroupEntity from './cost-group/cost-group.entity';
 import IncomeSourceEntity from './income-source/income-source.entity';
+import UserInfoEntity from './user-info/user-info.entity';
 
 import { CheckApiKeysMiddleware } from './app.middleware';
 
@@ -35,6 +37,7 @@ import DB_CONF from './config/db';
         BudgetEntity,
         CostGroupEntity,
         IncomeSourceEntity,
+        UserInfoEntity,
       ],
       synchronize: true,
     }),
@@ -43,6 +46,7 @@ import DB_CONF from './config/db';
     BudgetsModule,
     CostGroupModule,
     IncomeSourceModule,
+    UserInfoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

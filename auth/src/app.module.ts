@@ -5,10 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { UserInfoModule } from './user-info/user-info.module';
 
 import UserEntity from './users/users.entity';
-import UserInfoEntity from './user-info/user-info.entity';
 
 import DB_CONF from './config/db';
 
@@ -22,11 +20,10 @@ import DB_CONF from './config/db';
       username: DB_CONF.DB_USERNAME,
       password: DB_CONF.DB_PASS,
       database: DB_CONF.DB_NAME,
-      entities: [UserEntity, UserInfoEntity],
+      entities: [UserEntity],
       synchronize: true,
     }),
     UsersModule,
-    UserInfoModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -22,7 +22,4 @@ export default class User {
 
   @Column({ type: 'datetime' })
   created_at: Date;
-
-  @Column()
-  balance: number;
 }
