@@ -26,4 +26,14 @@ export class AppService {
     }).then((res) => res.json());
     return result;
   }
+
+  async getUserIdByToken(token: string): Promise<number | null> {
+    const { status, data } = await fetch(AUTH_URL + 'users/getid', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    if (status && status === 200) return +data.id;
+    else return null;
+  }
 }

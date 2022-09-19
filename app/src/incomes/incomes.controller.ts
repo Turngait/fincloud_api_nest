@@ -1,12 +1,13 @@
-import { Controller, Delete, Get, Post } from '@nestjs/common';
+import { Controller, Delete, Post, Headers } from '@nestjs/common';
 import { IncomesService } from './incomes.service';
 
 @Controller('incomes')
 export class IncomesController {
   constructor(private readonly incomesService: IncomesService) {}
 
-  @Get('test')
-  testFunc() {
+  @Post('test')
+  testFunc(@Headers() headers: any) {
+    console.log(headers);
     return this.incomesService.getTest();
   }
 

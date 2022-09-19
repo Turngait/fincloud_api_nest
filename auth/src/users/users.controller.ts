@@ -21,6 +21,11 @@ export class UsersController {
     return await this.userService.addUser(dto.email, dto.pass, dto.name);
   }
 
+  @Post('/getid')
+  async getId(@Body() dto: { token: string }) {
+    return await this.userService.getUserIdByToken(dto.token);
+  }
+
   @Patch('/setdata')
   async changeData() {
     return 'changeData';

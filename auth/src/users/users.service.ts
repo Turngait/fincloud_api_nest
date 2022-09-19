@@ -17,6 +17,12 @@ export class UsersService {
   }
 
   async addUser(email: string, pass: string, name: string) {
+    const oldUser = await this.getUserByEmail(email);
+    if (oldUser)
+      return {
+        status: 409,
+        data: { token: null, msg: 'User with such email is exist', id: null },
+      };
     const paper = createPaper();
     const user = new UserEntity();
     user.email = email;
@@ -28,10 +34,10 @@ export class UsersService {
 
     try {
       await this.userRepository.save(user);
-      return { status: 202, token: user.token, msg: '' };
+      return { status: 202, data: { token: user.token, msg: '', id: user.id } };
     } catch (err) {
       console.log(err);
-      return { status: 500, token: null, msg: err };
+      return { status: 500, data: { token: null, msg: err, id: null } };
     }
   }
 
@@ -48,6 +54,30 @@ export class UsersService {
     } catch (err) {
       console.log(err);
       return { status: 500, token: null, msg: err };
+    }
+  }
+
+  async getUserByEmail(email: string) {
+    try {
+      return await this.userRepository.findOneBy({ email });
+    } catch (err) {
+      console.log(err);
+      return null;
+    }
+  }
+
+  async getUserIdByToken(token: string): Promise<{
+    status: number;
+    data: { id: number | null; msg: string; token: string };
+  }> {
+    try {
+      const user = await this.userRepository.findOneBy({ token });
+      if (user) return { status: 200, data: { id: user.id, msg: '', token } };
+      else
+        return { status: 404, data: { id: null, msg: 'Wrong token', token } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { id: null, msg: err, token } };
     }
   }
 }

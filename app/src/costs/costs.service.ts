@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ICost } from 'src/interfaces/common';
 import { Repository } from 'typeorm';
 
 import CostEntity from './costs.entity';
@@ -11,24 +12,31 @@ export class CostsService {
     private costsRepository: Repository<CostEntity>,
   ) {}
 
-  async testCost() {
-    const cost = new CostEntity();
-    cost.amount = 100;
-    cost.budget_id = 200;
-    cost.date = new Date();
-    cost.description = 'ddsds';
-    cost.title = 'test';
-    cost.year = 2022;
-    cost.month = 2;
-    cost.user_id = 300;
-    cost.group_id = 400;
+  async addCost(
+    cost: ICost,
+    userId: number,
+  ): Promise<{
+    status: number;
+    data: { cost: CostEntity | null; msg: string };
+  }> {
+    const newCost = new CostEntity();
+    newCost.amount = cost.amount;
+    newCost.budget_id = cost.budget_id;
+    newCost.date = new Date(cost.date);
+    newCost.description = cost.description;
+    newCost.title = cost.title;
+    newCost.year = cost.year;
+    newCost.month = cost.month;
+    newCost.user_id = userId;
+    newCost.group_id = cost.group_id;
+    newCost.period = cost.year + '-' + String(cost.month).padStart(2, '0');
 
     try {
-      await this.costsRepository.save(cost);
-      return 'Done';
+      await this.costsRepository.save(newCost);
+      return { status: 202, data: { cost: newCost, msg: '' } };
     } catch (err) {
       console.log(err);
-      return err.message;
+      return { status: 500, data: { cost: null, msg: err } };
     }
   }
 }

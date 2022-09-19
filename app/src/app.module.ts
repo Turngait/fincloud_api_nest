@@ -1,4 +1,4 @@
-import { Module, MiddlewareConsumer } from '@nestjs/common';
+import { Module, MiddlewareConsumer, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
@@ -18,9 +18,12 @@ import CostGroupEntity from './cost-group/cost-group.entity';
 import IncomeSourceEntity from './income-source/income-source.entity';
 import UserInfoEntity from './user-info/user-info.entity';
 
-import { CheckApiKeysMiddleware } from './app.middleware';
+import { CheckApiKeysMiddleware, CheckTokenMiddleware } from './app.middleware';
 
 import DB_CONF from './config/db';
+import { BudgetsService } from './budgets/budgets.service';
+import { CostGroupService } from './cost-group/cost-group.service';
+import { IncomeSourceService } from './income-source/income-source.service';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -49,10 +52,29 @@ import DB_CONF from './config/db';
     UserInfoModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    BudgetsService,
+    CostGroupService,
+    IncomeSourceService,
+  ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(CheckApiKeysMiddleware).forRoutes('/');
+    consumer
+      .apply(CheckTokenMiddleware)
+      .exclude(
+        { path: 'users/signin', method: RequestMethod.POST },
+        { path: 'users/signup', method: RequestMethod.POST },
+      )
+      .forRoutes(
+        'budgets',
+        'cost-group',
+        'costs',
+        'income-source',
+        'user-info',
+        'incomes',
+      );
   }
 }

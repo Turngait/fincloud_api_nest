@@ -14,6 +14,9 @@ export default class Cost {
   @Column()
   month: number;
 
+  @Column()
+  period: string;
+
   @Column('text')
   description: string;
 
