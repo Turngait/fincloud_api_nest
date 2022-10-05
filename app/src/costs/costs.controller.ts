@@ -12,7 +12,7 @@ export class CostsController {
   }
 
   @Delete()
-  async deleteCost() {
-    return 'Delete cost';
+  async deleteCost(@Body() dto: { costId: number }) {
+    return await this.costService.deleteCost(dto.costId);
   }
 }

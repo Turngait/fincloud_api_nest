@@ -37,4 +37,16 @@ export class IncomeSourceService {
       return { status: 500, source: null, msg: err };
     }
   }
+
+  async getIncomesSources(userId): Promise<any> {
+    try {
+      const sources = await this.incomeSourceRepository.findBy({
+        user_id: userId,
+      });
+      return { sources, msg: '' };
+    } catch (err) {
+      console.log(err);
+      return { sources: null, msg: err };
+    }
+  }
 }

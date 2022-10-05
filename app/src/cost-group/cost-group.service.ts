@@ -33,4 +33,16 @@ export class CostGroupService {
       return { status: 500, group: null, msg: err };
     }
   }
+
+  async getCostsGroups(userId: number): Promise<any> {
+    try {
+      const groups = await this.costsGroupRepository.findBy({
+        user_id: userId,
+      });
+      return { groups, msg: '' };
+    } catch (err) {
+      console.log(err);
+      return { groups: null, msg: err };
+    }
+  }
 }

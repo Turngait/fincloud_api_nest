@@ -10,6 +10,6 @@ import CostEntity from './costs.entity';
   imports: [TypeOrmModule.forFeature([CostEntity])],
   controllers: [CostsController],
   providers: [CostsService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, CostsService],
 })
 export class CostsModule {}

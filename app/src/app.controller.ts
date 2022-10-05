@@ -1,8 +1,10 @@
-import { Body, Controller, Get, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Headers } from '@nestjs/common';
 import { AppService } from './app.service';
 import { BudgetsService } from './budgets/budgets.service';
 import { CostGroupService } from './cost-group/cost-group.service';
+import { CostsService } from './costs/costs.service';
 import { IncomeSourceService } from './income-source/income-source.service';
+import { IncomesService } from './incomes/incomes.service';
 
 @Controller()
 export class AppController {
@@ -11,6 +13,8 @@ export class AppController {
     private readonly budgetService: BudgetsService,
     private readonly costGroupService: CostGroupService,
     private readonly incomeSourceService: IncomeSourceService,
+    private readonly costsService: CostsService,
+    private readonly incomesService: IncomesService,
   ) {}
 
   @Get()
@@ -23,9 +27,31 @@ export class AppController {
     return 'test';
   }
 
-  @Post('/getfindata"')
-  async getFinData() {
-    return 'Fin data';
+  @Post('/getfindata')
+  async getFinData(@Body() dto: { period: string }, @Headers() headers: any) {
+    const { costs } = await this.costsService.getCostsByPeriod(
+      dto.period,
+      headers.userId,
+    );
+    const { groups } = await this.costGroupService.getCostsGroups(
+      headers.userId,
+    );
+
+    const { incomes } = await this.incomesService.getIncomesByPeriod(
+      dto.period,
+      headers.userId,
+    );
+
+    const { sources } = await this.incomeSourceService.getIncomesSources(
+      headers.userId,
+    );
+
+    const { budgets } = await this.budgetService.getBudgets(headers.userId);
+    return {
+      costs: { costs, groups: groups },
+      incomes: { incomes, sources: sources },
+      budgets,
+    };
   }
 
   @Post('/user/signin')

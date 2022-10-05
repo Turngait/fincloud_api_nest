@@ -24,6 +24,8 @@ import DB_CONF from './config/db';
 import { BudgetsService } from './budgets/budgets.service';
 import { CostGroupService } from './cost-group/cost-group.service';
 import { IncomeSourceService } from './income-source/income-source.service';
+import { CostsService } from './costs/costs.service';
+import { IncomesService } from './incomes/incomes.service';
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -57,6 +59,8 @@ import { IncomeSourceService } from './income-source/income-source.service';
     BudgetsService,
     CostGroupService,
     IncomeSourceService,
+    CostsService,
+    IncomesService,
   ],
 })
 export class AppModule {

@@ -35,4 +35,14 @@ export class BudgetsService {
       return { status: 500, budget: null, msg: err };
     }
   }
+
+  async getBudgets(userId: number): Promise<any> {
+    try {
+      const budgets = await this.budgetRepository.findBy({ user_id: userId });
+      return { budgets, msg: '' };
+    } catch (err) {
+      console.log(err);
+      return { budgets: null, msg: err };
+    }
+  }
 }
