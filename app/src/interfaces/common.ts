@@ -34,3 +34,12 @@ export interface ICostGroup {
   created_at: Date;
   user_id?: number;
 }
+
+export interface IIncomeSources {
+  id?: number;
+  title: string;
+  description: string;
+  order: number;
+  created_at: Date;
+  user_id?: number;
+}

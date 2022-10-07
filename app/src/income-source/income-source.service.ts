@@ -49,4 +49,16 @@ export class IncomeSourceService {
       return { sources: null, msg: err };
     }
   }
+
+  async deleteCostsGroup(
+    incomeSourceID: number,
+  ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
+    try {
+      await this.incomeSourceRepository.delete(incomeSourceID);
+      return { status: 200, data: { isDeleted: false, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
 }

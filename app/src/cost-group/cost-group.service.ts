@@ -45,4 +45,16 @@ export class CostGroupService {
       return { groups: null, msg: err };
     }
   }
+
+  async deleteCostsGroup(
+    costGroupID: number,
+  ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
+    try {
+      await this.costsGroupRepository.delete(costGroupID);
+      return { status: 200, data: { isDeleted: false, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
 }

@@ -25,7 +25,7 @@ export class CostGroupController {
   }
 
   @Delete()
-  async deleteCostGroup() {
-    return 'Delete cost';
+  async deleteCostGroup(@Body() dto: { costGroupId: number }) {
+    return await this.costGroupService.deleteCostsGroup(dto.costGroupId);
   }
 }
