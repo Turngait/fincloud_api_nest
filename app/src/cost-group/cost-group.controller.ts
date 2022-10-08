@@ -15,6 +15,7 @@ export class CostGroupController {
       dto.costGroup.title,
       dto.costGroup.description,
       headers.userId,
+      dto.costGroup.account_id,
       dto.costGroup.order || 0,
     );
   }

@@ -18,6 +18,7 @@ export class BudgetsService {
     balance: number,
     description: string,
     isCalc: boolean,
+    account_id: number,
   ): Promise<{ status: number; budget: BudgetEntity | null; msg: string }> {
     const newBudget = new BudgetEntity();
     newBudget.balance = balance;
@@ -26,6 +27,7 @@ export class BudgetsService {
     newBudget.description = description;
     newBudget.created_at = dateToday();
     newBudget.is_calculated = isCalc;
+    newBudget.account_id = account_id;
 
     try {
       await this.budgetRepository.save(newBudget);
@@ -44,5 +46,9 @@ export class BudgetsService {
       console.log(err);
       return { budgets: null, msg: err };
     }
+  }
+
+  async decreesBudget(budgetId: number, amount: number): Promise<any> {
+    return null;
   }
 }

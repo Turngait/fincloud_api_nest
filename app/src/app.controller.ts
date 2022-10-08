@@ -1,10 +1,12 @@
 import { Body, Controller, Get, Patch, Post, Headers } from '@nestjs/common';
+import { AccountsService } from './accounts/accounts.service';
 import { AppService } from './app.service';
 import { BudgetsService } from './budgets/budgets.service';
 import { CostGroupService } from './cost-group/cost-group.service';
 import { CostsService } from './costs/costs.service';
 import { IncomeSourceService } from './income-source/income-source.service';
 import { IncomesService } from './incomes/incomes.service';
+import { dateToday } from './utils/date';
 
 @Controller()
 export class AppController {
@@ -15,6 +17,7 @@ export class AppController {
     private readonly incomeSourceService: IncomeSourceService,
     private readonly costsService: CostsService,
     private readonly incomesService: IncomesService,
+    private readonly accountsService: AccountsService,
   ) {}
 
   @Get()
@@ -47,10 +50,13 @@ export class AppController {
     );
 
     const { budgets } = await this.budgetService.getBudgets(headers.userId);
+
+    const { accounts } = await this.accountsService.getAccount(headers.userId);
     return {
       costs: { costs, groups: groups },
       incomes: { incomes, sources: sources },
       budgets,
+      accounts,
     };
   }
 
@@ -60,19 +66,51 @@ export class AppController {
   }
 
   @Post('/user/signup')
-  async signUp(@Body() dto: { email: string; pass: string; name: string }) {
+  async signUp(
+    @Body()
+    dto: {
+      email: string;
+      pass: string;
+      name: string;
+      accountTitle: string;
+      currency: string;
+      initialBalance: number;
+    },
+  ) {
     const result = await this.appService.signUp(dto.email, dto.pass, dto.name);
     if (result && result.status && result.status === 202) {
+      const newAcc = {
+        title: dto.accountTitle,
+        description: '',
+        created_at: dateToday(),
+        balance: dto.initialBalance,
+        currency: dto.currency,
+      };
+      const account = await this.accountsService.addAccount(
+        newAcc,
+        +result.data.id,
+      );
       await this.budgetService.addBudget(
         +result.data.id,
         'Основной',
         0,
         '',
         true,
+        account.data.account.id,
       );
 
-      await this.costGroupService.addGroup('Основная', '', +result.data.id);
-      await this.incomeSourceService.addSource('Основной', '', +result.data.id);
+      await this.costGroupService.addGroup(
+        'Основная',
+        '',
+        account.data.account.id + result.data.id,
+        account.data.account.id,
+      );
+      await this.incomeSourceService.addSource(
+        'Основной',
+        '',
+        +result.data.id,
+        account.data.account.id,
+      );
       return result;
     }
     return result;

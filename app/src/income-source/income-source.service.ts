@@ -16,6 +16,7 @@ export class IncomeSourceService {
     title: string,
     desc: string,
     userId: number,
+    account_id: number,
     order = 0,
   ): Promise<{
     status: number;
@@ -28,6 +29,7 @@ export class IncomeSourceService {
     source.user_id = userId;
     source.created_at = dateToday();
     source.order = order;
+    source.account_id = account_id;
 
     try {
       await this.incomeSourceRepository.save(source);
@@ -55,7 +57,7 @@ export class IncomeSourceService {
   ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
     try {
       await this.incomeSourceRepository.delete(incomeSourceID);
-      return { status: 200, data: { isDeleted: false, msg: '' } };
+      return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
       return { status: 500, data: { isDeleted: false, msg: err } };

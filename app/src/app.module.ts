@@ -17,6 +17,7 @@ import BudgetEntity from './budgets/budgets.entity';
 import CostGroupEntity from './cost-group/cost-group.entity';
 import IncomeSourceEntity from './income-source/income-source.entity';
 import UserInfoEntity from './user-info/user-info.entity';
+import AccountEntity from './accounts/accounts.entity';
 
 import { CheckApiKeysMiddleware, CheckTokenMiddleware } from './app.middleware';
 
@@ -26,6 +27,9 @@ import { CostGroupService } from './cost-group/cost-group.service';
 import { IncomeSourceService } from './income-source/income-source.service';
 import { CostsService } from './costs/costs.service';
 import { IncomesService } from './incomes/incomes.service';
+import { AccountsModule } from './accounts/accounts.module';
+import { AccountsService } from './accounts/accounts.service';
+
 @Module({
   imports: [
     ConfigModule.forRoot(),
@@ -43,6 +47,7 @@ import { IncomesService } from './incomes/incomes.service';
         CostGroupEntity,
         IncomeSourceEntity,
         UserInfoEntity,
+        AccountEntity,
       ],
       synchronize: true,
     }),
@@ -52,6 +57,7 @@ import { IncomesService } from './incomes/incomes.service';
     CostGroupModule,
     IncomeSourceModule,
     UserInfoModule,
+    AccountsModule,
   ],
   controllers: [AppController],
   providers: [
@@ -61,6 +67,7 @@ import { IncomesService } from './incomes/incomes.service';
     IncomeSourceService,
     CostsService,
     IncomesService,
+    AccountsService,
   ],
 })
 export class AppModule {
@@ -79,6 +86,7 @@ export class AppModule {
         'income-source',
         'user-info',
         'incomes',
+        'accounts',
       );
   }
 }

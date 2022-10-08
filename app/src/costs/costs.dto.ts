@@ -1,12 +1,14 @@
 export class CostDTO {
   title: string;
-  period: string;
+  year: number;
+  month: number;
   description: string;
   date: string;
   group_id: number;
   budget_id: number;
-  user_id: number;
   amount: number;
+  period?: string;
+  account_id: number;
 }
 
 export class CostGroupDTO {

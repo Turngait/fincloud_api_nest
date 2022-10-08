@@ -16,6 +16,7 @@ export class CostGroupService {
     title: string,
     desc: string,
     userId: number,
+    account_id: number,
     order = 0,
   ): Promise<{ status: number; group: CostGroupEntity | null; msg: string }> {
     const group = new CostGroupEntity();
@@ -24,6 +25,7 @@ export class CostGroupService {
     group.title = title;
     group.order = order;
     group.user_id = userId;
+    group.account_id = account_id;
 
     try {
       await this.costsGroupRepository.save(group);
@@ -51,7 +53,7 @@ export class CostGroupService {
   ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
     try {
       await this.costsGroupRepository.delete(costGroupID);
-      return { status: 200, data: { isDeleted: false, msg: '' } };
+      return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
       return { status: 500, data: { isDeleted: false, msg: err } };

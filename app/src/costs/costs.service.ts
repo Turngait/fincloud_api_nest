@@ -29,6 +29,7 @@ export class CostsService {
     newCost.month = cost.month;
     newCost.user_id = userId;
     newCost.group_id = cost.group_id;
+    newCost.account_id = cost.account_id;
     newCost.period = cost.year + '-' + String(cost.month).padStart(2, '0');
 
     try {

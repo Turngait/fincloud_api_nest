@@ -10,10 +10,4 @@ export default class UserInfo {
 
   @Column('text')
   local: string;
-
-  @Column('text')
-  currency: string;
-
-  @Column()
-  balance: number;
 }

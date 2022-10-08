@@ -46,6 +46,7 @@ export class IncomesService {
     newIncome.source_id = income.source_id;
     newIncome.user_id = userId;
     newIncome.year = income.year;
+    newIncome.account_id = income.account_id;
     newIncome.period =
       income.year + '-' + String(income.month).padStart(2, '0');
     try {

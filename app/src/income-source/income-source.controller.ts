@@ -15,6 +15,7 @@ export class IncomeSourceController {
       dto.IncomeSource.title,
       dto.IncomeSource.description,
       headers.userId,
+      dto.IncomeSource.account_id,
       dto.IncomeSource.order || 0,
     );
   }

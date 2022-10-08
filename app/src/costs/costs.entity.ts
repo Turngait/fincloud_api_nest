@@ -32,6 +32,9 @@ export default class Cost {
   @Column('bigint')
   user_id: number;
 
+  @Column('bigint')
+  account_id: number;
+
   @Column()
   amount: number;
 }
