@@ -16,11 +16,16 @@ export class IncomesService {
     return 'It works ' + process.env.API_KEY;
   }
 
-  async getIncomesByPeriod(period: string, userId: number): Promise<any> {
+  async getIncomesByPeriod(
+    period: string,
+    userId: number,
+    accountID: number,
+  ): Promise<any> {
     try {
       const incomes = await this.incomeRepository.findBy({
         period,
         user_id: userId,
+        account_id: accountID,
       });
       return { incomes, msg: '' };
     } catch (err) {

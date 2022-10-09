@@ -31,25 +31,35 @@ export class AppController {
   }
 
   @Post('/getfindata')
-  async getFinData(@Body() dto: { period: string }, @Headers() headers: any) {
+  async getFinData(
+    @Body() dto: { period: string; accountID: number },
+    @Headers() headers: any,
+  ) {
     const { costs } = await this.costsService.getCostsByPeriod(
       dto.period,
       headers.userId,
+      dto.accountID,
     );
     const { groups } = await this.costGroupService.getCostsGroups(
       headers.userId,
+      dto.accountID,
     );
 
     const { incomes } = await this.incomesService.getIncomesByPeriod(
       dto.period,
       headers.userId,
+      dto.accountID,
     );
 
     const { sources } = await this.incomeSourceService.getIncomesSources(
       headers.userId,
+      dto.accountID,
     );
 
-    const { budgets } = await this.budgetService.getBudgets(headers.userId);
+    const { budgets } = await this.budgetService.getBudgets(
+      headers.userId,
+      dto.accountID,
+    );
 
     const { accounts } = await this.accountsService.getAccount(headers.userId);
     return {
@@ -62,7 +72,9 @@ export class AppController {
 
   @Post('/user/signin')
   async signIn(@Body() dto: { email: string; pass: string }) {
-    return await this.appService.signIn(dto.email, dto.pass);
+    const user = await this.appService.signIn(dto.email, dto.pass);
+    const { accounts } = await this.accountsService.getAccount(user.id);
+    return { user, account: accounts[0] };
   }
 
   @Post('/user/signup')

@@ -36,10 +36,11 @@ export class CostGroupService {
     }
   }
 
-  async getCostsGroups(userId: number): Promise<any> {
+  async getCostsGroups(userId: number, accountID: number): Promise<any> {
     try {
       const groups = await this.costsGroupRepository.findBy({
         user_id: userId,
+        account_id: accountID,
       });
       return { groups, msg: '' };
     } catch (err) {

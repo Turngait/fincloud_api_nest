@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { IAccount } from 'src/interfaces/common';
+import { IAccount, TypeOfOps } from 'src/interfaces/common';
 import { Repository } from 'typeorm';
 
 import AccountEntity from './accounts.entity';
@@ -75,11 +75,23 @@ export class AccountsService {
     }
   }
 
-  async decreesBalance(accountID: number, amount: number) {
+  async changeBalance(
+    accountID: number,
+    amount: number,
+    type: TypeOfOps,
+  ): Promise<{
+    status: number;
+    data: { isChanged: boolean; balance: number | null; msg: string };
+  }> {
     try {
       const { account } = await this.getAccountByID(accountID);
-      account.balance = account.balance - amount;
-      this.accountsRepository.save(account);
+      if (type === TypeOfOps.DECREASE) {
+        account.balance = account.balance - amount;
+      }
+      if (type === TypeOfOps.INCREASE) {
+        account.balance = account.balance + amount;
+      }
+      await this.accountsRepository.save(account);
       return {
         status: 200,
         data: { isChanged: true, balance: account.balance, msg: '' },

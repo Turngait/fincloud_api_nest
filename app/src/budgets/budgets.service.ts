@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import BudgetEntity from './budgets.entity';
 import { dateToday } from 'src/utils/date';
+import { TypeOfOps } from 'src/interfaces/common';
 
 @Injectable()
 export class BudgetsService {
@@ -38,9 +39,12 @@ export class BudgetsService {
     }
   }
 
-  async getBudgets(userId: number): Promise<any> {
+  async getBudgets(userId: number, accountID: number): Promise<any> {
     try {
-      const budgets = await this.budgetRepository.findBy({ user_id: userId });
+      const budgets = await this.budgetRepository.findBy({
+        user_id: userId,
+        account_id: accountID,
+      });
       return { budgets, msg: '' };
     } catch (err) {
       console.log(err);
@@ -48,7 +52,45 @@ export class BudgetsService {
     }
   }
 
-  async decreesBudget(budgetId: number, amount: number): Promise<any> {
-    return null;
+  async getBudgetByID(budgetID: number): Promise<any> {
+    try {
+      const budget = await this.budgetRepository.findOneBy({ id: budgetID });
+      return { budget, msg: '' };
+    } catch (err) {
+      console.log(err);
+      return { budget: null, msg: err };
+    }
+  }
+
+  async changeBalance(
+    budgetID: number,
+    amount: number,
+    type: TypeOfOps,
+  ): Promise<{
+    status: number;
+    data: { isChanged: boolean; balance: number | null; msg: string };
+  }> {
+    try {
+      const { budget } = await this.getBudgetByID(budgetID);
+      console.log(budgetID);
+      if (!budget) throw new NotFoundException();
+      if (type === TypeOfOps.DECREASE) {
+        budget.balance = budget.balance - amount;
+      }
+      if (type === TypeOfOps.INCREASE) {
+        budget.balance = budget.balance + amount;
+      }
+      await this.budgetRepository.save(budget);
+      return {
+        status: 200,
+        data: { isChanged: true, balance: budget.balance, msg: '' },
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        status: 500,
+        data: { isChanged: false, balance: null, msg: err },
+      };
+    }
   }
 }

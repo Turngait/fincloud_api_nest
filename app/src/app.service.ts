@@ -9,7 +9,10 @@ export class AppService {
     return 'Hello World!';
   }
 
-  async signIn(email: string, pass: string) {
+  async signIn(
+    email: string,
+    pass: string,
+  ): Promise<{ status: number; token: string; id: number; msg: string }> {
     const result = await fetch(AUTH_URL + 'users/signin', {
       method: 'POST',
       body: JSON.stringify({ email, pass }),

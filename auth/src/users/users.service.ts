@@ -44,16 +44,21 @@ export class UsersService {
   async signIn(email: string, pass: string) {
     try {
       const user = await this.userRepository.findOneBy({ email });
-      if (user.pass === createPassword(pass, user.paper)) {
+      if (user && user.pass === createPassword(pass, user.paper)) {
         user.token = createToken();
         await this.userRepository.save(user);
-        return { status: 200, token: user.token, msg: '' };
+        return { status: 200, token: user.token, id: user.id, msg: '' };
       } else {
-        return { status: 403, token: 122222, msg: 'Wrong email or password' };
+        return {
+          status: 403,
+          token: null,
+          id: null,
+          msg: 'Wrong email or password',
+        };
       }
     } catch (err) {
       console.log(err);
-      return { status: 500, token: null, msg: err };
+      return { status: 500, token: null, id: null, msg: err };
     }
   }
 

@@ -1,4 +1,5 @@
 export class CostDTO {
+  id?: number;
   title: string;
   year: number;
   month: number;

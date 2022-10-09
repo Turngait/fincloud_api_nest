@@ -54,11 +54,16 @@ export class CostsService {
     }
   }
 
-  async getCostsByPeriod(period: string, userId: number): Promise<any> {
+  async getCostsByPeriod(
+    period: string,
+    userId: number,
+    accountID: number,
+  ): Promise<any> {
     try {
       const costs = await this.costsRepository.findBy({
         period,
         user_id: userId,
+        account_id: accountID,
       });
       const graphData = this.addGraphData(costs);
       return { costs, graphData, msg: '' };

@@ -58,3 +58,8 @@ export interface IAccount {
   currency: string;
   is_active?: boolean;
 }
+
+export enum TypeOfOps {
+  INCREASE,
+  DECREASE,
+}

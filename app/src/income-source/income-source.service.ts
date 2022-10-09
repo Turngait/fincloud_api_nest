@@ -40,10 +40,11 @@ export class IncomeSourceService {
     }
   }
 
-  async getIncomesSources(userId): Promise<any> {
+  async getIncomesSources(userId: number, accountID: number): Promise<any> {
     try {
       const sources = await this.incomeSourceRepository.findBy({
         user_id: userId,
+        account_id: accountID,
       });
       return { sources, msg: '' };
     } catch (err) {
