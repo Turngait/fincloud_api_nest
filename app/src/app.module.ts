@@ -87,6 +87,7 @@ export class AppModule {
         'user-info',
         'incomes',
         'accounts',
+        'getfindata',
       );
   }
 }

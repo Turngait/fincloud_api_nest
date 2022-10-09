@@ -25,7 +25,6 @@ export class CostsController {
 
   @Delete()
   async deleteCost(@Body() dto: { cost: CostDTO }) {
-    console.log(dto.cost);
     const resultCost = await this.costService.deleteCost(dto.cost.id);
     return await this.changeBalances(
       dto.cost,

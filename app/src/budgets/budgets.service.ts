@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 
 import BudgetEntity from './budgets.entity';
 import { dateToday } from 'src/utils/date';
-import { TypeOfOps } from 'src/interfaces/common';
+import { IBudget, TypeOfOps } from 'src/interfaces/common';
 
 @Injectable()
 export class BudgetsService {
@@ -90,6 +90,57 @@ export class BudgetsService {
       return {
         status: 500,
         data: { isChanged: false, balance: null, msg: err },
+      };
+    }
+  }
+
+  async deleteBudget(budgetId: number): Promise<{
+    status: number;
+    data: { isDeleted: boolean; msg: string };
+  }> {
+    try {
+      const budget = await this.getBudgetByID(budgetId);
+      if (budget.balance !== 0) {
+        return {
+          status: 401,
+          data: { isDeleted: false, msg: 'Budget not equal zero' },
+        };
+      }
+      await this.budgetRepository.delete(budgetId);
+      return {
+        status: 200,
+        data: { isDeleted: true, msg: '' },
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        status: 500,
+        data: { isDeleted: false, msg: err },
+      };
+    }
+  }
+
+  async editBudget(newBudget: IBudget): Promise<any> {
+    try {
+      const budget = await this.getBudgetByID(newBudget.id);
+      if (!budget) throw new NotFoundException();
+
+      budget.title = newBudget.title;
+      budget.balance = newBudget.balance;
+      budget.description = newBudget.description;
+      budget.is_calculated = newBudget.is_calculating;
+
+      await this.budgetRepository.save(budget);
+
+      return {
+        status: 200,
+        data: { isChanged: true, msg: '' },
+      };
+    } catch (err) {
+      console.log(err);
+      return {
+        status: 500,
+        data: { isChanged: false, msg: err },
       };
     }
   }

@@ -1,18 +1,14 @@
 export class IncomeDTO {
+  id?: number;
   title: string;
-  period: string;
+  year: number;
+  month: number;
+  period?: string;
   description: string;
-  amount: number;
+  date: Date;
   source_id: number;
   budget_id: number;
-  user_id: number;
-  timestamp: string;
-}
-
-export class IncomeSourceDTO {
-  title: string;
-  order: number;
-  description: string;
-  created_at?: string;
-  user_id: string;
+  user_id?: number;
+  amount: number;
+  account_id: number;
 }

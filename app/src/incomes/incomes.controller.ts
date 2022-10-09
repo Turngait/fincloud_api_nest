@@ -1,24 +1,75 @@
 import { Controller, Delete, Post, Headers, Body } from '@nestjs/common';
-import { IIncome } from 'src/interfaces/common';
+import { AccountsService } from 'src/accounts/accounts.service';
+import { BudgetsService } from 'src/budgets/budgets.service';
+import { IIncome, TypeOfOps } from 'src/interfaces/common';
+import { IncomeDTO } from './incomes.dto';
 import { IncomesService } from './incomes.service';
 
 @Controller('incomes')
 export class IncomesController {
-  constructor(private readonly incomesService: IncomesService) {}
-
-  @Post('test')
-  testFunc(@Headers() headers: any) {
-    console.log(headers);
-    return this.incomesService.getTest();
-  }
+  constructor(
+    private readonly incomesService: IncomesService,
+    private readonly accountService: AccountsService,
+    private readonly budgetsService: BudgetsService,
+  ) {}
 
   @Post()
-  async addIncome(@Body() dto: { income: IIncome }, @Headers() headers: any) {
-    return await this.incomesService.addIncome(dto.income, headers.userId);
+  async addIncome(@Body() dto: { income: IncomeDTO }, @Headers() headers: any) {
+    const addedIncome = await this.incomesService.addIncome(
+      dto.income,
+      headers.userId,
+    );
+    return await this.changeBalances(
+      dto.income,
+      addedIncome.status,
+      TypeOfOps.INCREASE,
+    );
   }
 
   @Delete()
-  async deleteIncome(@Body() dto: { incomeId: number }) {
-    return await this.incomesService.deleteIncome(dto.incomeId);
+  async deleteIncome(@Body() dto: { income: IncomeDTO }) {
+    const resultIncome = await this.incomesService.deleteIncome(dto.income.id);
+    return await this.changeBalances(
+      dto.income,
+      resultIncome.status,
+      TypeOfOps.DECREASE,
+    );
+  }
+
+  async changeBalances(
+    income: IIncome,
+    initStatus: number,
+    typeOfOp: TypeOfOps,
+  ): Promise<any> {
+    let changedAcc = null;
+    if (initStatus === 200 || initStatus === 202) {
+      changedAcc = await this.accountService.changeBalance(
+        income.account_id,
+        income.amount,
+        typeOfOp,
+      );
+      if (changedAcc && changedAcc.status === 200) {
+        await this.budgetsService.changeBalance(
+          income.budget_id,
+          income.amount,
+          typeOfOp,
+        );
+        return {
+          status: initStatus,
+          data: {
+            isDeleted: true,
+            balance: changedAcc.data.balance,
+          },
+        };
+      }
+    }
+    return {
+      status: 500,
+      data: {
+        cost: null,
+        balance: null,
+        msg: changedAcc.data.msg,
+      },
+    };
   }
 }

@@ -12,10 +12,6 @@ export class IncomesService {
     private incomeRepository: Repository<IncomeEntity>,
   ) {}
 
-  getTest() {
-    return 'It works ' + process.env.API_KEY;
-  }
-
   async getIncomesByPeriod(
     period: string,
     userId: number,
