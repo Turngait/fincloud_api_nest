@@ -58,7 +58,7 @@ export class CostsService {
     period: string,
     userId: number,
     accountID: number,
-  ): Promise<any> {
+  ): Promise<{ costs: CostEntity[] | null; graphData: any; msg: string }> {
     try {
       const costs = await this.costsRepository.findBy({
         period,
@@ -69,10 +69,11 @@ export class CostsService {
       return { costs, graphData, msg: '' };
     } catch (err) {
       console.log(err);
-      return { costs: null, msg: err };
+      return { costs: null, graphData: null, msg: err };
     }
   }
 
+  // TODO Move ti utils
   addGraphData(costs) {
     const graphCosts = [];
     const graphDays = [];

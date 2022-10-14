@@ -16,17 +16,18 @@ export class IncomesService {
     period: string,
     userId: number,
     accountID: number,
-  ): Promise<any> {
+  ): Promise<{ incomes: IncomeEntity[] | null; graphData: any; msg: string }> {
     try {
       const incomes = await this.incomeRepository.findBy({
         period,
         user_id: userId,
         account_id: accountID,
       });
-      return { incomes, msg: '' };
+      const graphData = this.addGraphData(incomes);
+      return { incomes, graphData, msg: '' };
     } catch (err) {
       console.log(err);
-      return { incomes: null, msg: err };
+      return { incomes: null, graphData: null, msg: err };
     }
   }
 
@@ -70,5 +71,30 @@ export class IncomesService {
       console.log(err);
       return { status: 500, data: { isDeleted: false, msg: err } };
     }
+  }
+
+  // TODO Move ti utils
+  addGraphData(items) {
+    const graphIncomes = [];
+    const graphDays = [];
+    const days = new Set();
+    for (const cost of items) {
+      days.add(new Date(cost.date).getUTCDate());
+    }
+    for (const day of days) {
+      let sum = 0;
+      for (const cost of items) {
+        const day2 = new Date(cost.date).getUTCDate();
+        if (day === day2) sum += cost.amount;
+      }
+      graphIncomes.push(sum);
+      graphDays.push(day);
+    }
+    graphIncomes.reverse();
+    graphDays.reverse();
+    return {
+      days: graphDays,
+      incomes: graphIncomes,
+    };
   }
 }

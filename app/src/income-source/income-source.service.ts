@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { IIncomeSources } from 'src/interfaces/common';
 import { dateToday } from 'src/utils/date';
 import { Repository } from 'typeorm';
 
@@ -62,6 +63,37 @@ export class IncomeSourceService {
     } catch (err) {
       console.log(err);
       return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
+
+  async updateIncomeSource(newSource: IIncomeSources): Promise<{
+    status: number;
+    data: { isUpdated: boolean; msg: string };
+  }> {
+    try {
+      const { incomeSource } = await this.getIncomeSourceByID(newSource.id);
+      if (!incomeSource) throw new NotFoundException();
+      incomeSource.title = newSource.title;
+      incomeSource.description = newSource.description;
+      incomeSource.order = newSource.order;
+      await this.incomeSourceRepository.save(incomeSource);
+
+      return { status: 200, data: { isUpdated: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { isUpdated: false, msg: err } };
+    }
+  }
+
+  async getIncomeSourceByID(
+    id: number,
+  ): Promise<{ incomeSource: IncomeSourceEntity; msg: string }> {
+    try {
+      const source = await this.incomeSourceRepository.findOneBy({ id });
+      return { incomeSource: source, msg: '' };
+    } catch (err) {
+      console.log(err);
+      return { incomeSource: null, msg: err };
     }
   }
 }

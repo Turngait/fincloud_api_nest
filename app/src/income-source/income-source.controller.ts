@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Headers, Patch, Post } from '@nestjs/common';
-import { IIncomeSources } from 'src/interfaces/common';
+import { IncomeSourceDTO } from './income-source.dto';
 import { IncomeSourceService } from './income-source.service';
 
 @Controller('income-source')
@@ -8,7 +8,7 @@ export class IncomeSourceController {
 
   @Post()
   async addIncomeSource(
-    @Body() dto: { IncomeSource: IIncomeSources },
+    @Body() dto: { IncomeSource: IncomeSourceDTO },
     @Headers() headers: any,
   ) {
     return this.incomeSourceService.addSource(
@@ -21,8 +21,8 @@ export class IncomeSourceController {
   }
 
   @Patch()
-  async updateIncomeSource() {
-    return 'Delete cost';
+  async updateIncomeSource(@Body() dto: { source: IncomeSourceDTO }) {
+    return await this.incomeSourceService.updateIncomeSource(dto.source);
   }
 
   @Delete()

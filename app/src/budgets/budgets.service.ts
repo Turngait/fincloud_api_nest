@@ -39,7 +39,10 @@ export class BudgetsService {
     }
   }
 
-  async getBudgets(userId: number, accountID: number): Promise<any> {
+  async getBudgets(
+    userId: number,
+    accountID: number,
+  ): Promise<{ budgets: BudgetEntity[] | null; msg: string }> {
     try {
       const budgets = await this.budgetRepository.findBy({
         user_id: userId,
@@ -52,7 +55,9 @@ export class BudgetsService {
     }
   }
 
-  async getBudgetByID(budgetID: number): Promise<any> {
+  async getBudgetByID(
+    budgetID: number,
+  ): Promise<{ budget: BudgetEntity | null; msg: string }> {
     try {
       const budget = await this.budgetRepository.findOneBy({ id: budgetID });
       return { budget, msg: '' };
@@ -99,7 +104,7 @@ export class BudgetsService {
     data: { isDeleted: boolean; msg: string };
   }> {
     try {
-      const budget = await this.getBudgetByID(budgetId);
+      const { budget } = await this.getBudgetByID(budgetId);
       if (budget.balance !== 0) {
         return {
           status: 401,
@@ -120,9 +125,12 @@ export class BudgetsService {
     }
   }
 
-  async editBudget(newBudget: IBudget): Promise<any> {
+  async editBudget(newBudget: IBudget): Promise<{
+    status: number;
+    data: { isUpdated: boolean; msg: string };
+  }> {
     try {
-      const budget = await this.getBudgetByID(newBudget.id);
+      const { budget } = await this.getBudgetByID(newBudget.id);
       if (!budget) throw new NotFoundException();
 
       budget.title = newBudget.title;
@@ -134,13 +142,13 @@ export class BudgetsService {
 
       return {
         status: 200,
-        data: { isChanged: true, msg: '' },
+        data: { isUpdated: true, msg: '' },
       };
     } catch (err) {
       console.log(err);
       return {
         status: 500,
-        data: { isChanged: false, msg: err },
+        data: { isUpdated: false, msg: err },
       };
     }
   }

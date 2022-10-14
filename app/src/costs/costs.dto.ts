@@ -11,11 +11,3 @@ export class CostDTO {
   period?: string;
   account_id: number;
 }
-
-export class CostGroupDTO {
-  title: string;
-  order: number;
-  description: string;
-  created_at?: string;
-  user_id: string;
-}

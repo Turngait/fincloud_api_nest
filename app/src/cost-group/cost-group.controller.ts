@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Patch, Post, Headers } from '@nestjs/common';
-import { ICostGroup } from 'src/interfaces/common';
+import { CostGroupDTO } from './cost-group.dto';
 import { CostGroupService } from './cost-group.service';
 
 @Controller('cost-group')
@@ -8,7 +8,7 @@ export class CostGroupController {
 
   @Post()
   async addCostGroup(
-    @Body() dto: { costGroup: ICostGroup },
+    @Body() dto: { costGroup: CostGroupDTO },
     @Headers() headers: any,
   ) {
     return await this.costGroupService.addGroup(
@@ -21,8 +21,8 @@ export class CostGroupController {
   }
 
   @Patch()
-  async updateCostGroup() {
-    return 'Delete cost';
+  async updateCostGroup(@Body() dto: { costGroup: CostGroupDTO }) {
+    return await this.costGroupService.updateCostGroup(dto.costGroup);
   }
 
   @Delete()

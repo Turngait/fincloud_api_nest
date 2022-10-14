@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IAccount, TypeOfOps } from 'src/interfaces/common';
 import { Repository } from 'typeorm';
@@ -54,6 +54,7 @@ export class AccountsService {
   async getAccountByID(
     accountID: number,
   ): Promise<{ account: AccountEntity | null; msg: string }> {
+    if (!accountID) return { account: null, msg: 'Id is not correct' };
     try {
       const account = await this.accountsRepository.findOneBy({
         id: accountID,
@@ -65,7 +66,9 @@ export class AccountsService {
     }
   }
 
-  async deleteAccount(accountID: number): Promise<any> {
+  async deleteAccount(
+    accountID: number,
+  ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
     try {
       await this.accountsRepository.delete(accountID);
       return { status: 200, data: { isDeleted: true, msg: '' } };
@@ -102,6 +105,24 @@ export class AccountsService {
         status: 500,
         data: { isChanged: false, balance: null, msg: err },
       };
+    }
+  }
+
+  async updateAccount(newAccount: IAccount): Promise<{
+    status: number;
+    data: { isUpdated: boolean; msg: string };
+  }> {
+    const { account } = await this.getAccountByID(newAccount.id);
+    if (!account) throw new NotFoundException();
+    account.title = newAccount.title;
+    account.description = newAccount.description;
+    try {
+      await this.accountsRepository.save(account);
+
+      return { status: 200, data: { isUpdated: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }
 }

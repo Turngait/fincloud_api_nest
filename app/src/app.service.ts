@@ -39,4 +39,17 @@ export class AppService {
     if (status && status === 200) return +data.id;
     else return null;
   }
+
+  async changeUserPass(
+    token: string,
+    oldPass: string,
+    newPass: string,
+  ): Promise<{ status: number; token: string; id: number; msg: string }> {
+    const result = await fetch(AUTH_URL + 'users/changepassword', {
+      method: 'POST',
+      body: JSON.stringify({ token, oldPass, newPass }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    return result;
+  }
 }

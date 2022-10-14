@@ -134,7 +134,13 @@ export class AppController {
   }
 
   @Patch('/user/changepassword')
-  async changePass() {
-    return 'changePass';
+  async changePass(
+    @Body() dto: { token: string; oldPass: string; newPass: string },
+  ) {
+    return await this.appService.changeUserPass(
+      dto.token,
+      dto.oldPass,
+      dto.newPass,
+    );
   }
 }

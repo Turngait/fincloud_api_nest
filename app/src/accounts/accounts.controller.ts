@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Patch, Post } from '@nestjs/common';
 
 import { AccountDTO } from './accounts.dto';
 import { AccountsService } from './accounts.service';
@@ -18,5 +18,10 @@ export class AccountsController {
     @Headers() headers: any,
   ): Promise<any> {
     return await this.accountsService.addAccount(dto.account, headers.userId);
+  }
+
+  @Patch()
+  async updateAccount(@Body() dto: { account: AccountDTO }): Promise<any> {
+    return await this.accountsService.updateAccount(dto.account);
   }
 }

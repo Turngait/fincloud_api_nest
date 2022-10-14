@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { dateToday } from 'src/utils/date';
 import { Repository } from 'typeorm';
 
 import CostGroupEntity from './cost-group.entity';
+import { ICostGroup } from 'src/interfaces/common';
 
 @Injectable()
 export class CostGroupService {
@@ -18,7 +19,7 @@ export class CostGroupService {
     userId: number,
     account_id: number,
     order = 0,
-  ): Promise<{ status: number; group: CostGroupEntity | null; msg: string }> {
+  ): Promise<{ status: number; group: ICostGroup | null; msg: string }> {
     const group = new CostGroupEntity();
     group.created_at = dateToday();
     group.description = desc;
@@ -36,7 +37,10 @@ export class CostGroupService {
     }
   }
 
-  async getCostsGroups(userId: number, accountID: number): Promise<any> {
+  async getCostsGroups(
+    userId: number,
+    accountID: number,
+  ): Promise<{ groups: CostGroupEntity[] | null; msg: string }> {
     try {
       const groups = await this.costsGroupRepository.findBy({
         user_id: userId,
@@ -58,6 +62,37 @@ export class CostGroupService {
     } catch (err) {
       console.log(err);
       return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
+
+  async updateCostGroup(newGroup: ICostGroup): Promise<{
+    status: number;
+    data: { isUpdated: boolean; msg: string };
+  }> {
+    try {
+      const { costGroup } = await this.getCostGroupByID(newGroup.id);
+      if (!costGroup) throw new NotFoundException();
+      costGroup.title = newGroup.title;
+      costGroup.description = newGroup.description;
+      costGroup.order = newGroup.order;
+      await this.costsGroupRepository.save(costGroup);
+
+      return { status: 200, data: { isUpdated: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { isUpdated: false, msg: err } };
+    }
+  }
+
+  async getCostGroupByID(
+    id: number,
+  ): Promise<{ costGroup: CostGroupEntity; msg: string }> {
+    try {
+      const costGroup = await this.costsGroupRepository.findOneBy({ id });
+      return { costGroup, msg: '' };
+    } catch (err) {
+      console.log(err);
+      return { costGroup: null, msg: err };
     }
   }
 }

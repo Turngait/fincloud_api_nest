@@ -32,7 +32,13 @@ export class UsersController {
   }
 
   @Patch('/changepassword')
-  async changePass() {
-    return 'changePass';
+  async changePass(
+    @Body() dto: { token: string; oldPass: string; newPass: string },
+  ) {
+    return await this.userService.changeUserPass(
+      dto.token,
+      dto.oldPass,
+      dto.newPass,
+    );
   }
 }

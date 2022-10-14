@@ -85,4 +85,38 @@ export class UsersService {
       return { status: 500, data: { id: null, msg: err, token } };
     }
   }
+
+  async getUserByToken(
+    token: string,
+  ): Promise<{ user: UserEntity | null; msg: string; token: string }> {
+    try {
+      const user = await this.userRepository.findOneBy({ token });
+      if (user) return { user, msg: '', token };
+      else return { user: null, msg: 'Wrong token', token };
+    } catch (err) {
+      console.log(err);
+      return { user: null, msg: err, token };
+    }
+  }
+
+  async changeUserPass(
+    token: string,
+    oldPass: string,
+    newPass: string,
+  ): Promise<any> {
+    const { user } = await this.getUserByToken(token);
+    if (!user && user.pass !== createPassword(oldPass, user.paper))
+      return {
+        status: 403,
+        data: { isUpdated: false, msg: 'Password is not correct' },
+      };
+    user.pass = createPassword(newPass, user.paper);
+    try {
+      await this.userRepository.save(user);
+      return { status: 200, data: { isUpdated: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      return { status: 500, data: { isUpdated: false, msg: err } };
+    }
+  }
 }
