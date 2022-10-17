@@ -1,4 +1,11 @@
-import { Controller, Get, Patch, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Patch,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { UserDTO } from './users.dto';
 import { UsersService } from './users.service';
 
@@ -6,16 +13,13 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Get('/test')
-  getTest() {
-    return this.userService.getTest();
-  }
-
+  @UsePipes(new ValidationPipe())
   @Post('/signin')
   async signIn(@Body() dto: UserDTO) {
     return await this.userService.signIn(dto.email, dto.pass);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('/signup')
   async regUser(@Body() dto: UserDTO) {
     return await this.userService.addUser(dto.email, dto.pass, dto.name);

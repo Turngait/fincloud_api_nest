@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IAccount, TypeOfOps } from 'src/interfaces/common';
+import log, { LogLevels } from 'src/logger';
 import { Repository } from 'typeorm';
 
 import AccountEntity from './accounts.entity';
@@ -33,6 +34,7 @@ export class AccountsService {
       return { status: 202, data: { account: newAccount, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { account: null, msg: err } };
     }
   }
@@ -47,6 +49,7 @@ export class AccountsService {
       return { accounts, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
       return { accounts: null, msg: err };
     }
   }
@@ -62,6 +65,7 @@ export class AccountsService {
       return { account, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
       return { account: null, msg: err };
     }
   }
@@ -74,6 +78,7 @@ export class AccountsService {
       return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isDeleted: false, msg: err } };
     }
   }
@@ -101,6 +106,7 @@ export class AccountsService {
       };
     } catch (err) {
       console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
       return {
         status: 500,
         data: { isChanged: false, balance: null, msg: err },
@@ -122,6 +128,7 @@ export class AccountsService {
       return { status: 200, data: { isUpdated: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }

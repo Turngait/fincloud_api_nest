@@ -1,4 +1,12 @@
-import { Controller, Delete, Post, Headers, Body } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Post,
+  Headers,
+  Body,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
 import { IIncome, TypeOfOps } from 'src/interfaces/common';
@@ -13,6 +21,7 @@ export class IncomesController {
     private readonly budgetsService: BudgetsService,
   ) {}
 
+  @UsePipes(new ValidationPipe())
   @Post()
   async addIncome(@Body() dto: { income: IncomeDTO }, @Headers() headers: any) {
     const addedIncome = await this.incomesService.addIncome(
@@ -26,6 +35,7 @@ export class IncomesController {
     );
   }
 
+  @UsePipes(new ValidationPipe())
   @Delete()
   async deleteIncome(@Body() dto: { income: IncomeDTO }) {
     const resultIncome = await this.incomesService.deleteIncome(dto.income.id);

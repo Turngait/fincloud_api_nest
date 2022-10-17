@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IIncomeSources } from 'src/interfaces/common';
+import log, { LogLevels } from 'src/logger';
 import { dateToday } from 'src/utils/date';
 import { Repository } from 'typeorm';
 
@@ -36,7 +37,8 @@ export class IncomeSourceService {
       await this.incomeSourceRepository.save(source);
       return { status: 202, source: source, msg: '' };
     } catch (err) {
-      console.log();
+      console.log(err);
+      log(`From incomeSource service: ${err}`, LogLevels.ERROR);
       return { status: 500, source: null, msg: err };
     }
   }
@@ -50,6 +52,7 @@ export class IncomeSourceService {
       return { sources, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From incomeSource service: ${err}`, LogLevels.ERROR);
       return { sources: null, msg: err };
     }
   }
@@ -62,6 +65,7 @@ export class IncomeSourceService {
       return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From incomeSource service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isDeleted: false, msg: err } };
     }
   }
@@ -81,6 +85,7 @@ export class IncomeSourceService {
       return { status: 200, data: { isUpdated: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From incomeSource service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }
@@ -93,6 +98,7 @@ export class IncomeSourceService {
       return { incomeSource: source, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From incomeSource service: ${err}`, LogLevels.ERROR);
       return { incomeSource: null, msg: err };
     }
   }

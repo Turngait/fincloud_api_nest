@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ICost } from 'src/interfaces/common';
+import log, { LogLevels } from 'src/logger';
 import { Repository } from 'typeorm';
 
 import CostEntity from './costs.entity';
@@ -37,6 +38,7 @@ export class CostsService {
       return { status: 202, data: { cost: newCost, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { cost: null, msg: err } };
     }
   }
@@ -50,6 +52,7 @@ export class CostsService {
       return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isDeleted: false, msg: err } };
     }
   }
@@ -69,6 +72,7 @@ export class CostsService {
       return { costs, graphData, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
       return { costs: null, graphData: null, msg: err };
     }
   }

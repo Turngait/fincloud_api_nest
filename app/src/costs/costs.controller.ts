@@ -1,4 +1,12 @@
-import { Controller, Post, Delete, Body, Headers } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  Body,
+  Headers,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
 import { ICost, TypeOfOps } from 'src/interfaces/common';
@@ -13,6 +21,7 @@ export class CostsController {
     private readonly budgetsService: BudgetsService,
   ) {}
 
+  @UsePipes(new ValidationPipe())
   @Post()
   async addCost(@Body() dto: { cost: CostDTO }, @Headers() headers: any) {
     const addedCost = await this.costService.addCost(dto.cost, headers.userId);
@@ -23,6 +32,7 @@ export class CostsController {
     );
   }
 
+  @UsePipes(new ValidationPipe())
   @Delete()
   async deleteCost(@Body() dto: { cost: CostDTO }) {
     const resultCost = await this.costService.deleteCost(dto.cost.id);

@@ -6,6 +6,7 @@ import { CostGroupService } from './cost-group/cost-group.service';
 import { CostsService } from './costs/costs.service';
 import { IncomeSourceService } from './income-source/income-source.service';
 import { IncomesService } from './incomes/incomes.service';
+import log from './logger';
 import { dateToday } from './utils/date';
 
 @Controller()
@@ -27,6 +28,7 @@ export class AppController {
 
   @Get('/test')
   async test() {
+    log('Hello. It is test');
     return 'test';
   }
 

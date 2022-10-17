@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Headers, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Headers,
+  Patch,
+  Post,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { IncomeSourceDTO } from './income-source.dto';
 import { IncomeSourceService } from './income-source.service';
 
@@ -6,6 +15,7 @@ import { IncomeSourceService } from './income-source.service';
 export class IncomeSourceController {
   constructor(private readonly incomeSourceService: IncomeSourceService) {}
 
+  @UsePipes(new ValidationPipe())
   @Post()
   async addIncomeSource(
     @Body() dto: { IncomeSource: IncomeSourceDTO },
@@ -20,6 +30,7 @@ export class IncomeSourceController {
     );
   }
 
+  @UsePipes(new ValidationPipe())
   @Patch()
   async updateIncomeSource(@Body() dto: { source: IncomeSourceDTO }) {
     return await this.incomeSourceService.updateIncomeSource(dto.source);

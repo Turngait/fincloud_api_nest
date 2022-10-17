@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { IIncome } from 'src/interfaces/common';
+import log, { LogLevels } from 'src/logger';
 import { Repository } from 'typeorm';
 
 import IncomeEntity from './incomes.entity';
@@ -27,6 +28,7 @@ export class IncomesService {
       return { incomes, graphData, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From income service: ${err}`, LogLevels.ERROR);
       return { incomes: null, graphData: null, msg: err };
     }
   }
@@ -56,6 +58,7 @@ export class IncomesService {
       return { status: 202, data: { income: newIncome, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From income service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { income: null, msg: err } };
     }
   }
@@ -69,6 +72,7 @@ export class IncomesService {
       return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From income service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isDeleted: false, msg: err } };
     }
   }

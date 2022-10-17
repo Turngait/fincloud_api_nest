@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Patch, Post, Headers } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Patch,
+  Post,
+  Headers,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { BudgetDTO } from './budgets.dto';
 import { BudgetsService } from './budgets.service';
 
@@ -6,6 +15,7 @@ import { BudgetsService } from './budgets.service';
 export class BudgetsController {
   constructor(private readonly budgetService: BudgetsService) {}
 
+  @UsePipes(new ValidationPipe())
   @Post()
   async addBudget(@Body() dto: { budget: BudgetDTO }, @Headers() headers: any) {
     return await this.budgetService.addBudget(
@@ -18,6 +28,7 @@ export class BudgetsController {
     );
   }
 
+  @UsePipes(new ValidationPipe())
   @Patch()
   async updateBudget(@Body() dto: { budget: BudgetDTO }) {
     return await this.budgetService.editBudget(dto.budget);

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Patch, Post, Headers } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Patch,
+  Post,
+  Headers,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { CostGroupDTO } from './cost-group.dto';
 import { CostGroupService } from './cost-group.service';
 
@@ -6,6 +15,7 @@ import { CostGroupService } from './cost-group.service';
 export class CostGroupController {
   constructor(private readonly costGroupService: CostGroupService) {}
 
+  @UsePipes(new ValidationPipe())
   @Post()
   async addCostGroup(
     @Body() dto: { costGroup: CostGroupDTO },
@@ -20,6 +30,7 @@ export class CostGroupController {
     );
   }
 
+  @UsePipes(new ValidationPipe())
   @Patch()
   async updateCostGroup(@Body() dto: { costGroup: CostGroupDTO }) {
     return await this.costGroupService.updateCostGroup(dto.costGroup);

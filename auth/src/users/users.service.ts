@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import UserEntity from './users.entity';
 import { createPaper, createPassword, createToken } from 'src/config/sec';
 import { dateToday } from '../utils/date';
+import log, { LogLevels } from 'src/logger';
 @Injectable()
 export class UsersService {
   constructor(
@@ -37,6 +38,7 @@ export class UsersService {
       return { status: 202, data: { token: user.token, msg: '', id: user.id } };
     } catch (err) {
       console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { token: null, msg: err, id: null } };
     }
   }
@@ -58,6 +60,7 @@ export class UsersService {
       }
     } catch (err) {
       console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
       return { status: 500, token: null, id: null, msg: err };
     }
   }
@@ -67,6 +70,7 @@ export class UsersService {
       return await this.userRepository.findOneBy({ email });
     } catch (err) {
       console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
       return null;
     }
   }
@@ -82,6 +86,7 @@ export class UsersService {
         return { status: 404, data: { id: null, msg: 'Wrong token', token } };
     } catch (err) {
       console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { id: null, msg: err, token } };
     }
   }
@@ -95,6 +100,7 @@ export class UsersService {
       else return { user: null, msg: 'Wrong token', token };
     } catch (err) {
       console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
       return { user: null, msg: err, token };
     }
   }
@@ -116,6 +122,7 @@ export class UsersService {
       return { status: 200, data: { isUpdated: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import BudgetEntity from './budgets.entity';
 import { dateToday } from 'src/utils/date';
 import { IBudget, TypeOfOps } from 'src/interfaces/common';
+import log, { LogLevels } from 'src/logger';
 
 @Injectable()
 export class BudgetsService {
@@ -35,6 +36,7 @@ export class BudgetsService {
       return { status: 202, budget: newBudget, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
       return { status: 500, budget: null, msg: err };
     }
   }
@@ -51,6 +53,7 @@ export class BudgetsService {
       return { budgets, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
       return { budgets: null, msg: err };
     }
   }
@@ -63,6 +66,7 @@ export class BudgetsService {
       return { budget, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
       return { budget: null, msg: err };
     }
   }
@@ -92,6 +96,7 @@ export class BudgetsService {
       };
     } catch (err) {
       console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
       return {
         status: 500,
         data: { isChanged: false, balance: null, msg: err },
@@ -118,6 +123,7 @@ export class BudgetsService {
       };
     } catch (err) {
       console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
       return {
         status: 500,
         data: { isDeleted: false, msg: err },
@@ -146,6 +152,7 @@ export class BudgetsService {
       };
     } catch (err) {
       console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
       return {
         status: 500,
         data: { isUpdated: false, msg: err },

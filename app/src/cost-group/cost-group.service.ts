@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 
 import CostGroupEntity from './cost-group.entity';
 import { ICostGroup } from 'src/interfaces/common';
+import log, { LogLevels } from 'src/logger';
 
 @Injectable()
 export class CostGroupService {
@@ -33,6 +34,7 @@ export class CostGroupService {
       return { status: 202, group, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
       return { status: 500, group: null, msg: err };
     }
   }
@@ -49,6 +51,7 @@ export class CostGroupService {
       return { groups, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
       return { groups: null, msg: err };
     }
   }
@@ -61,6 +64,7 @@ export class CostGroupService {
       return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isDeleted: false, msg: err } };
     }
   }
@@ -80,6 +84,7 @@ export class CostGroupService {
       return { status: 200, data: { isUpdated: true, msg: '' } };
     } catch (err) {
       console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }
@@ -92,6 +97,7 @@ export class CostGroupService {
       return { costGroup, msg: '' };
     } catch (err) {
       console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
       return { costGroup: null, msg: err };
     }
   }
