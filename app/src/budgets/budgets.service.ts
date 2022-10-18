@@ -17,13 +17,12 @@ export class BudgetsService {
   async addBudget(
     userId: number,
     title: string,
-    balance: number,
     description: string,
     isCalc: boolean,
     account_id: number,
   ): Promise<{ status: number; budget: BudgetEntity | null; msg: string }> {
     const newBudget = new BudgetEntity();
-    newBudget.balance = balance;
+    newBudget.balance = 0;
     newBudget.title = title;
     newBudget.user_id = userId;
     newBudget.description = description;
@@ -116,6 +115,7 @@ export class BudgetsService {
           data: { isDeleted: false, msg: 'Budget not equal zero' },
         };
       }
+      console.log(budgetId);
       await this.budgetRepository.delete(budgetId);
       return {
         status: 200,

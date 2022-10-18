@@ -107,7 +107,6 @@ export class AppController {
       await this.budgetService.addBudget(
         +result.data.id,
         'Основной',
-        0,
         '',
         true,
         account.data.account.id,
@@ -125,6 +124,7 @@ export class AppController {
         +result.data.id,
         account.data.account.id,
       );
+      result.data.accountId = account.data.account.id;
       return result;
     }
     return result;
