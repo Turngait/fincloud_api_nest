@@ -115,7 +115,7 @@ export class AppController {
       await this.costGroupService.addGroup(
         'Основная',
         '',
-        account.data.account.id + result.data.id,
+        +result.data.id,
         account.data.account.id,
       );
       await this.incomeSourceService.addSource(

@@ -48,35 +48,47 @@ export class CostsController {
     initStatus: number,
     typeOfOp: TypeOfOps,
   ): Promise<any> {
-    let changedAcc = null;
-    if (initStatus === 200 || initStatus === 202) {
-      changedAcc = await this.accountService.changeBalance(
-        cost.account_id,
-        cost.amount,
-        typeOfOp,
-      );
-      if (changedAcc && changedAcc.status === 200) {
-        await this.budgetsService.changeBalance(
-          cost.budget_id,
+    try {
+      let changedAcc = null;
+      if (initStatus === 200 || initStatus === 202) {
+        changedAcc = await this.accountService.changeBalance(
+          cost.account_id,
           cost.amount,
           typeOfOp,
         );
-        return {
-          status: initStatus,
-          data: {
-            isDeleted: true,
-            balance: changedAcc.data.balance,
-          },
-        };
+        if (changedAcc && changedAcc.status === 200) {
+          await this.budgetsService.changeBalance(
+            cost.budget_id,
+            cost.amount,
+            typeOfOp,
+          );
+          return {
+            status: initStatus,
+            data: {
+              cost,
+              balance: changedAcc.data.balance,
+              msg: '',
+            },
+          };
+        }
       }
+      return {
+        status: 500,
+        data: {
+          cost: null,
+          balance: null,
+          msg: changedAcc.data.msg,
+        },
+      };
+    } catch (err) {
+      return {
+        status: 500,
+        data: {
+          cost: null,
+          balance: null,
+          msg: err,
+        },
+      };
     }
-    return {
-      status: 500,
-      data: {
-        cost: null,
-        balance: null,
-        msg: changedAcc.data.msg,
-      },
-    };
   }
 }

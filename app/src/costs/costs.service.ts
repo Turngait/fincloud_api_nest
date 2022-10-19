@@ -69,7 +69,7 @@ export class CostsService {
         account_id: accountID,
       });
       const graphData = this.addGraphData(costs);
-      return { costs, graphData, msg: '' };
+      return { costs: this.normalizeCosts(costs), graphData, msg: '' };
     } catch (err) {
       console.log(err);
       log(`From cost service: ${err}`, LogLevels.ERROR);
@@ -100,5 +100,33 @@ export class CostsService {
       days: graphDays,
       costs: graphCosts,
     };
+  }
+
+  normalizeCosts(costs) {
+    if (costs.length > 0) {
+      const items = [];
+      const periods = new Set();
+      costs.map((item) => {
+        periods.add(item.date.toString());
+      });
+      let spentByPeriod = 0;
+      for (const period of periods) {
+        const item = costs.filter((item) => item.date.toString() === period);
+        let spentByDay = 0;
+        for (const i of item) {
+          spentByDay += i.amount;
+          spentByPeriod += i.amount;
+        }
+        items.push({
+          period,
+          items: item,
+          spentByDay,
+          spentByThisMonth: spentByPeriod,
+        });
+      }
+      return items;
+    } else {
+      return costs;
+    }
   }
 }

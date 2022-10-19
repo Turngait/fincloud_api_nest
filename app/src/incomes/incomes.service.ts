@@ -25,7 +25,7 @@ export class IncomesService {
         account_id: accountID,
       });
       const graphData = this.addGraphData(incomes);
-      return { incomes, graphData, msg: '' };
+      return { incomes: this.normalizeIncomes(incomes), graphData, msg: '' };
     } catch (err) {
       console.log(err);
       log(`From income service: ${err}`, LogLevels.ERROR);
@@ -100,5 +100,29 @@ export class IncomesService {
       days: graphDays,
       incomes: graphIncomes,
     };
+  }
+
+  normalizeIncomes(incomes) {
+    if (incomes.length > 0) {
+      const items = [];
+      const periods = new Set();
+      incomes.map((item) => {
+        periods.add(item.date.toString());
+      });
+      let gainByPeriod = 0;
+
+      for (const period of periods) {
+        const item = incomes.filter((item) => item.date.toString() === period);
+        let gainByDay = 0;
+        for (const i of item) {
+          gainByDay += i.amount;
+          gainByPeriod += i.amount;
+        }
+        items.push({ period, items: item, gainByDay, gainByPeriod });
+      }
+      return items;
+    } else {
+      return incomes;
+    }
   }
 }
