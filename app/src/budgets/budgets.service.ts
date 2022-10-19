@@ -80,7 +80,6 @@ export class BudgetsService {
   }> {
     try {
       const { budget } = await this.getBudgetByID(budgetID);
-      console.log(budgetID);
       if (!budget) throw new NotFoundException();
       if (type === TypeOfOps.DECREASE) {
         budget.balance = budget.balance - amount;
@@ -115,7 +114,6 @@ export class BudgetsService {
           data: { isDeleted: false, msg: 'Budget not equal zero' },
         };
       }
-      console.log(budgetId);
       await this.budgetRepository.delete(budgetId);
       return {
         status: 200,
