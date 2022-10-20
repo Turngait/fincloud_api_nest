@@ -65,8 +65,8 @@ export class AppController {
 
     const { accounts } = await this.accountsService.getAccount(headers.userId);
     return {
-      costs: { costs, groups: groups },
-      incomes: { incomes, sources: sources },
+      costs: { costs, groups },
+      incomes: { incomes, sources },
       budgets,
       accounts,
     };

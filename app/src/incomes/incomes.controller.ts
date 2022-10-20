@@ -55,20 +55,21 @@ export class IncomesController {
     if (initStatus === 200 || initStatus === 202) {
       changedAcc = await this.accountService.changeBalance(
         income.account_id,
-        income.amount,
+        +income.amount,
         typeOfOp,
       );
       if (changedAcc && changedAcc.status === 200) {
         await this.budgetsService.changeBalance(
           income.budget_id,
-          income.amount,
+          +income.amount,
           typeOfOp,
         );
         return {
           status: initStatus,
           data: {
-            isDeleted: true,
+            income,
             balance: changedAcc.data.balance,
+            msg: '',
           },
         };
       }
@@ -76,7 +77,7 @@ export class IncomesController {
     return {
       status: 500,
       data: {
-        cost: null,
+        income: null,
         balance: null,
         msg: changedAcc.data.msg,
       },
