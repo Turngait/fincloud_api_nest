@@ -2,7 +2,7 @@ import {
   Body,
   Controller,
   Delete,
-  Patch,
+  Put,
   Post,
   Headers,
   UsePipes,
@@ -31,7 +31,7 @@ export class CostGroupController {
   }
 
   @UsePipes(new ValidationPipe())
-  @Patch()
+  @Put()
   async updateCostGroup(@Body() dto: { costGroup: CostGroupDTO }) {
     return await this.costGroupService.updateCostGroup(dto.costGroup);
   }

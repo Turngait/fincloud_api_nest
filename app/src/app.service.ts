@@ -52,4 +52,15 @@ export class AppService {
     }).then((res) => res.json());
     return result;
   }
+
+  async getUserData(
+    token: string,
+  ): Promise<{ name: string; email: string; id: number }> {
+    const result = await fetch(AUTH_URL + 'users/getdata', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    return result;
+  }
 }

@@ -126,4 +126,18 @@ export class UsersService {
       return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }
+
+  async getUserData(
+    token: string,
+  ): Promise<{ name: string; email: string; id: number }> {
+    try {
+      const { user } = await this.getUserByToken(token);
+      if (!user) return { name: '', email: '', id: 0 };
+      return { name: user.name, email: user.email, id: user.id };
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return { name: '', email: '', id: 0 };
+    }
+  }
 }

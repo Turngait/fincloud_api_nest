@@ -145,4 +145,19 @@ export class AppController {
       dto.newPass,
     );
   }
+
+  @Post('/user/getdata')
+  async getUserData(@Body() dto: { token: string; accountId: number }) {
+    const userData = await this.appService.getUserData(dto.token);
+    const { groups } = await this.costGroupService.getCostsGroups(
+      userData.id,
+      dto.accountId,
+    );
+    const { sources } = await this.incomeSourceService.getIncomesSources(
+      userData.id,
+      dto.accountId,
+    );
+    const { balance } = await this.accountsService.getBalance(dto.accountId);
+    return { userData, balance, groups, sources };
+  }
 }

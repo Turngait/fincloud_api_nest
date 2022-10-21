@@ -132,4 +132,19 @@ export class AccountsService {
       return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }
+
+  async getBalance(
+    accountId: number,
+  ): Promise<{ status: number; balance: number; accountId: number }> {
+    try {
+      const { account } = await this.getAccountByID(accountId);
+      if (!account) throw new NotFoundException();
+
+      return { status: 200, balance: account.balance, accountId };
+    } catch (err) {
+      console.log(err);
+      log(`From account service: ${err}`, LogLevels.ERROR);
+      return { status: 500, balance: 0, accountId };
+    }
+  }
 }

@@ -3,8 +3,8 @@ import {
   Controller,
   Delete,
   Headers,
-  Patch,
   Post,
+  Put,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -31,7 +31,7 @@ export class IncomeSourceController {
   }
 
   @UsePipes(new ValidationPipe())
-  @Patch()
+  @Put()
   async updateIncomeSource(@Body() dto: { source: IncomeSourceDTO }) {
     return await this.incomeSourceService.updateIncomeSource(dto.source);
   }

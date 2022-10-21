@@ -43,7 +43,10 @@ export class IncomeSourceService {
     }
   }
 
-  async getIncomesSources(userId: number, accountID: number): Promise<any> {
+  async getIncomesSources(
+    userId: number,
+    accountID: number,
+  ): Promise<{ sources: IncomeSourceEntity[]; msg: string }> {
     try {
       const sources = await this.incomeSourceRepository.findBy({
         user_id: userId,

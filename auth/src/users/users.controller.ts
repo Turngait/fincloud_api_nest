@@ -45,4 +45,9 @@ export class UsersController {
       dto.newPass,
     );
   }
+
+  @Post('/getdata')
+  async getUserData(@Body() dto: { token: string }) {
+    return await this.userService.getUserData(dto.token);
+  }
 }
