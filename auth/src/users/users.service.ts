@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -111,7 +111,7 @@ export class UsersService {
     newPass: string,
   ): Promise<any> {
     const { user } = await this.getUserByToken(token);
-    if (!user && user.pass !== createPassword(oldPass, user.paper))
+    if (!user || user.pass !== createPassword(oldPass, user.paper))
       return {
         status: 403,
         data: { isUpdated: false, msg: 'Password is not correct' },
@@ -138,6 +138,23 @@ export class UsersService {
       console.log(err);
       log(`From user service: ${err}`, LogLevels.ERROR);
       return { name: '', email: '', id: 0 };
+    }
+  }
+
+  async changeUserName(
+    token: string,
+    newName: string,
+  ): Promise<{ status: number; data: { isUpdated: boolean; msg: string } }> {
+    try {
+      const { user } = await this.getUserByToken(token);
+      if (!user) throw new NotFoundException();
+      user.name = newName;
+      await this.userRepository.save(user);
+      return { status: 200, data: { isUpdated: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return { status: 500, data: { isUpdated: false, msg: err } };
     }
   }
 }

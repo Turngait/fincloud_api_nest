@@ -46,7 +46,7 @@ export class AppService {
     newPass: string,
   ): Promise<{ status: number; token: string; id: number; msg: string }> {
     const result = await fetch(AUTH_URL + 'users/changepassword', {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify({ token, oldPass, newPass }),
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => res.json());
@@ -59,6 +59,18 @@ export class AppService {
     const result = await fetch(AUTH_URL + 'users/getdata', {
       method: 'POST',
       body: JSON.stringify({ token }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    return result;
+  }
+
+  async setNewName(
+    token: string,
+    name: string,
+  ): Promise<{ status: number; data: { isUpdated: boolean; msg: string } }> {
+    const result = await fetch(AUTH_URL + 'users/changename', {
+      method: 'PUT',
+      body: JSON.stringify({ token, name }),
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => res.json());
     return result;

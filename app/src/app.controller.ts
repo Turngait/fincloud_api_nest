@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Headers } from '@nestjs/common';
+import { Body, Controller, Get, Post, Headers, Put } from '@nestjs/common';
 import { AccountsService } from './accounts/accounts.service';
 import { AppService } from './app.service';
 import { BudgetsService } from './budgets/budgets.service';
@@ -130,17 +130,18 @@ export class AppController {
     return result;
   }
 
-  @Patch('/user/setdata')
-  async changeData() {
-    return 'changeData';
+  @Put('/user/setname')
+  async changeName(@Body() dto: { name: string }, @Headers() headers: any) {
+    return await this.appService.setNewName(headers.token, dto.name);
   }
 
-  @Patch('/user/changepassword')
+  @Put('/user/changepassword')
   async changePass(
-    @Body() dto: { token: string; oldPass: string; newPass: string },
+    @Body() dto: { oldPass: string; newPass: string },
+    @Headers() headers: any,
   ) {
     return await this.appService.changeUserPass(
-      dto.token,
+      headers.token,
       dto.oldPass,
       dto.newPass,
     );

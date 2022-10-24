@@ -1,10 +1,10 @@
 import {
   Controller,
-  Patch,
   Post,
   Body,
   UsePipes,
   ValidationPipe,
+  Put,
 } from '@nestjs/common';
 import { UserDTO } from './users.dto';
 import { UsersService } from './users.service';
@@ -30,12 +30,12 @@ export class UsersController {
     return await this.userService.getUserIdByToken(dto.token);
   }
 
-  @Patch('/setdata')
-  async changeData() {
-    return 'changeData';
+  @Put('/changename')
+  async changeName(@Body() dto: { token: string; name: string }) {
+    return await this.userService.changeUserName(dto.token, dto.name);
   }
 
-  @Patch('/changepassword')
+  @Put('/changepassword')
   async changePass(
     @Body() dto: { token: string; oldPass: string; newPass: string },
   ) {
