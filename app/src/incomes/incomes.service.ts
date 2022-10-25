@@ -120,7 +120,11 @@ export class IncomesService {
         }
         items.push({ period, items: item, gainByDay, gainByPeriod });
       }
-      return items;
+      return items.sort((a, b) => {
+        if (new Date(a.period) > new Date(b.period)) return -1;
+        if (new Date(a.period) < new Date(b.period)) return 1;
+        return 0;
+      });
     } else {
       return incomes;
     }

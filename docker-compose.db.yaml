@@ -1,0 +1,69 @@
+version: '3.1'
+
+services:
+
+  # nginx:
+  #   image: nginx:stable-alpine
+  #   container_name: fc-nginx
+  #   ports:
+  #     - "5000:80"
+  #   volumes:
+  #     - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+  #   depends_on:
+  #     - fc-api
+
+  # fc-api:
+  #   image: "node:18"
+  #   container_name: fc-api
+  #   working_dir: /home/node/app
+  #   volumes:
+  #     - ./app:/home/node/app
+  #   links:
+  #     - db
+  #     - fc-auth
+  #   command: npm run start:dev
+  #   environment:
+  #     - SALT=${SALT}
+  #     - SALT2=${SALT2}
+  #     - APP_NAME=${APP_NAME}
+  #     - API_KEY=${API_KEY}
+  #     - DB_USERNAME=root
+  #     - DB_PASS=example
+  #   depends_on:
+  #     - db
+  #     - fc-auth
+
+  # fc-auth:
+  #   image: "node:18"
+  #   container_name: fc-auth
+  #   working_dir: /home/node/app
+  #   volumes:
+  #     - ./auth:/home/node/app
+  #   links:
+  #     - db
+  #   command: npm run start:dev
+  #   environment:
+  #     - SALT=${SALT}
+  #     - SALT2=${SALT2}
+  #     - APP_NAME=${APP_NAME}
+  #     - DB_USERNAME=root
+  #     - DB_PASS=example
+  #   depends_on:
+  #     - db
+
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes: 
+      - ./db/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+
+  myadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    links: 
+      - db
+    ports:
+      - 8082:80

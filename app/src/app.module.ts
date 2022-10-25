@@ -4,31 +4,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CostsModule } from './costs/costs.module';
-import { IncomesModule } from './incomes/incomes.module';
-import { BudgetsModule } from './budgets/budgets.module';
-import { CostGroupModule } from './cost-group/cost-group.module';
-import { IncomeSourceModule } from './income-source/income-source.module';
-import { UserInfoModule } from './user-info/user-info.module';
-
-import CostEntity from './costs/costs.entity';
-import IncomeEntity from './incomes/incomes.entity';
-import BudgetEntity from './budgets/budgets.entity';
-import CostGroupEntity from './cost-group/cost-group.entity';
-import IncomeSourceEntity from './income-source/income-source.entity';
-import UserInfoEntity from './user-info/user-info.entity';
-import AccountEntity from './accounts/accounts.entity';
 
 import { CheckApiKeysMiddleware, CheckTokenMiddleware } from './app.middleware';
 
 import DB_CONF from './config/db';
-import { BudgetsService } from './budgets/budgets.service';
-import { CostGroupService } from './cost-group/cost-group.service';
-import { IncomeSourceService } from './income-source/income-source.service';
-import { CostsService } from './costs/costs.service';
-import { IncomesService } from './incomes/incomes.service';
-import { AccountsModule } from './accounts/accounts.module';
-import { AccountsService } from './accounts/accounts.service';
+
+import modules from './global.modules';
+import providers from './global.providers';
+import entities from './global.entities';
 
 @Module({
   imports: [
@@ -40,35 +23,13 @@ import { AccountsService } from './accounts/accounts.service';
       username: DB_CONF.DB_USERNAME,
       password: DB_CONF.DB_PASS,
       database: DB_CONF.DB_NAME,
-      entities: [
-        CostEntity,
-        IncomeEntity,
-        BudgetEntity,
-        CostGroupEntity,
-        IncomeSourceEntity,
-        UserInfoEntity,
-        AccountEntity,
-      ],
+      entities,
       synchronize: true,
     }),
-    CostsModule,
-    IncomesModule,
-    BudgetsModule,
-    CostGroupModule,
-    IncomeSourceModule,
-    UserInfoModule,
-    AccountsModule,
+    ...modules,
   ],
   controllers: [AppController],
-  providers: [
-    AppService,
-    BudgetsService,
-    CostGroupService,
-    IncomeSourceService,
-    CostsService,
-    IncomesService,
-    AccountsService,
-  ],
+  providers: [AppService, ...providers],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {

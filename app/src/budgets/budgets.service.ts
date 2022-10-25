@@ -20,9 +20,10 @@ export class BudgetsService {
     description: string,
     isCalc: boolean,
     account_id: number,
+    balance = 0,
   ): Promise<{ status: number; budget: BudgetEntity | null; msg: string }> {
     const newBudget = new BudgetEntity();
-    newBudget.balance = 0;
+    newBudget.balance = balance;
     newBudget.title = title;
     newBudget.user_id = userId;
     newBudget.description = description;

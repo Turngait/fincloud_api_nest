@@ -106,10 +106,11 @@ export class AppController {
       );
       await this.budgetService.addBudget(
         +result.data.id,
-        'Основной',
+        dto.accountTitle,
         '',
         true,
         account.data.account.id,
+        dto.initialBalance,
       );
 
       await this.costGroupService.addGroup(

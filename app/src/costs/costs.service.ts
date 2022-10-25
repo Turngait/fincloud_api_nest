@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ICost } from 'src/interfaces/common';
-import log, { LogLevels } from 'src/logger';
 import { Repository } from 'typeorm';
 
 import CostEntity from './costs.entity';
+import log, { LogLevels } from 'src/logger';
 
 @Injectable()
 export class CostsService {
@@ -124,7 +124,11 @@ export class CostsService {
           spentByThisMonth: spentByPeriod,
         });
       }
-      return items;
+      return items.sort((a, b) => {
+        if (new Date(a.period) > new Date(b.period)) return -1;
+        if (new Date(a.period) < new Date(b.period)) return 1;
+        return 0;
+      });
     } else {
       return costs;
     }
