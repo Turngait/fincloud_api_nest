@@ -1,20 +1,20 @@
 import { IsNumber, IsString, MinLength } from 'class-validator';
 
-export class CostGroupDTO {
-  id?: number;
-
+export class AccountDTO {
   @IsString()
   @MinLength(2)
   title: string;
 
-  user_id?: number;
-
   @IsString()
   description: string;
 
-  created_at?: Date;
-  order?: number;
+  created_at: Date;
 
   @IsNumber()
-  account_id: number;
+  balance: number;
+
+  @IsString()
+  currency: string;
+
+  is_active?: boolean;
 }

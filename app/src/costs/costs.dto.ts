@@ -1,18 +1,35 @@
-export class CostDTO {
-  title: string;
-  period: string;
-  description: string;
-  date: string;
-  group_id: number;
-  budget_id: number;
-  user_id: number;
-  amount: number;
-}
+import { IsNumber, IsString, MinLength } from 'class-validator';
 
-export class CostGroupDTO {
+export class CostDTO {
+  id?: number;
+
+  @IsString()
+  @MinLength(2)
   title: string;
-  order: number;
+
+  @IsNumber()
+  year: number;
+
+  @IsNumber()
+  month: number;
+
+  @IsString()
   description: string;
-  created_at?: string;
-  user_id: string;
+
+  @IsString()
+  date: string;
+
+  @IsNumber()
+  group_id: number;
+
+  @IsNumber()
+  budget_id: number;
+
+  @IsNumber()
+  amount: number;
+
+  period?: string;
+
+  @IsNumber()
+  account_id: number;
 }

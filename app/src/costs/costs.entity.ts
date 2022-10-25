@@ -14,6 +14,9 @@ export default class Cost {
   @Column()
   month: number;
 
+  @Column()
+  period: string;
+
   @Column('text')
   description: string;
 
@@ -28,6 +31,9 @@ export default class Cost {
 
   @Column('bigint')
   user_id: number;
+
+  @Column('bigint')
+  account_id: number;
 
   @Column()
   amount: number;

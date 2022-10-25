@@ -9,6 +9,6 @@ import CostGroupEntity from './cost-group.entity';
   imports: [TypeOrmModule.forFeature([CostGroupEntity])],
   controllers: [CostGroupController],
   providers: [CostGroupService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, CostGroupService],
 })
 export class CostGroupModule {}

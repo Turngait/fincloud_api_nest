@@ -1,4 +1,11 @@
-import { Controller, Get, Patch, Post, Body } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  UsePipes,
+  ValidationPipe,
+  Put,
+} from '@nestjs/common';
 import { UserDTO } from './users.dto';
 import { UsersService } from './users.service';
 
@@ -6,28 +13,41 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
-  @Get('/test')
-  getTest() {
-    return this.userService.getTest();
-  }
-
+  @UsePipes(new ValidationPipe())
   @Post('/signin')
   async signIn(@Body() dto: UserDTO) {
     return await this.userService.signIn(dto.email, dto.pass);
   }
 
+  @UsePipes(new ValidationPipe())
   @Post('/signup')
   async regUser(@Body() dto: UserDTO) {
     return await this.userService.addUser(dto.email, dto.pass, dto.name);
   }
 
-  @Patch('/setdata')
-  async changeData() {
-    return 'changeData';
+  @Post('/getid')
+  async getId(@Body() dto: { token: string }) {
+    return await this.userService.getUserIdByToken(dto.token);
   }
 
-  @Patch('/changepassword')
-  async changePass() {
-    return 'changePass';
+  @Put('/changename')
+  async changeName(@Body() dto: { token: string; name: string }) {
+    return await this.userService.changeUserName(dto.token, dto.name);
+  }
+
+  @Put('/changepassword')
+  async changePass(
+    @Body() dto: { token: string; oldPass: string; newPass: string },
+  ) {
+    return await this.userService.changeUserPass(
+      dto.token,
+      dto.oldPass,
+      dto.newPass,
+    );
+  }
+
+  @Post('/getdata')
+  async getUserData(@Body() dto: { token: string }) {
+    return await this.userService.getUserData(dto.token);
   }
 }

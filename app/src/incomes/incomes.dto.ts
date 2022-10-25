@@ -1,18 +1,37 @@
-export class IncomeDTO {
-  title: string;
-  period: string;
-  description: string;
-  amount: number;
-  source_id: number;
-  budget_id: number;
-  user_id: number;
-  timestamp: string;
-}
+import { IsDate, IsNumber, IsString, MinLength } from 'class-validator';
 
-export class IncomeSourceDTO {
+export class IncomeDTO {
+  id?: number;
+
+  @IsString()
+  @MinLength(2)
   title: string;
-  order: number;
+
+  @IsNumber()
+  year: number;
+
+  @IsNumber()
+  month: number;
+
+  period?: string;
+
+  @IsString()
   description: string;
-  created_at?: string;
-  user_id: string;
+
+  @IsDate()
+  date: Date;
+
+  @IsNumber()
+  source_id: number;
+
+  @IsNumber()
+  budget_id: number;
+
+  user_id?: number;
+
+  @IsNumber()
+  amount: number;
+
+  @IsNumber()
+  account_id: number;
 }

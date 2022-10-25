@@ -19,4 +19,7 @@ export default class IncomeSource {
 
   @Column('bigint')
   user_id: number;
+
+  @Column('bigint')
+  account_id: number;
 }

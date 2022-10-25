@@ -22,4 +22,7 @@ export default class Budget {
 
   @Column()
   is_calculated: boolean;
+
+  @Column('bigint')
+  account_id: number;
 }

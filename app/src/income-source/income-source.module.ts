@@ -9,6 +9,6 @@ import IncomeSourceEntity from './income-source.entity';
   imports: [TypeOrmModule.forFeature([IncomeSourceEntity])],
   controllers: [IncomeSourceController],
   providers: [IncomeSourceService],
-  exports: [TypeOrmModule],
+  exports: [TypeOrmModule, IncomeSourceService],
 })
 export class IncomeSourceModule {}
