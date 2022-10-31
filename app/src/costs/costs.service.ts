@@ -97,7 +97,7 @@ export class CostsService {
     graphCosts.reverse();
     graphDays.reverse();
     return {
-      days: graphDays,
+      days: [1, 2, 3],
       costs: graphCosts,
     };
   }

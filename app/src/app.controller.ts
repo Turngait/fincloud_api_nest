@@ -37,7 +37,7 @@ export class AppController {
     @Body() dto: { period: string; accountID: number },
     @Headers() headers: any,
   ) {
-    const { costs } = await this.costsService.getCostsByPeriod(
+    const { costs, graphData } = await this.costsService.getCostsByPeriod(
       dto.period,
       headers.userId,
       dto.accountID,
@@ -65,7 +65,7 @@ export class AppController {
 
     const { accounts } = await this.accountsService.getAccount(headers.userId);
     return {
-      costs: { costs, groups },
+      costs: { costs, groups, graphData },
       incomes: { incomes, sources },
       budgets,
       accounts,
