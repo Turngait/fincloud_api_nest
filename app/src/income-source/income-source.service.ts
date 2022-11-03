@@ -60,7 +60,7 @@ export class IncomeSourceService {
     }
   }
 
-  async deleteCostsGroup(
+  async deleteIncomeSource(
     incomeSourceID: number,
   ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
     try {

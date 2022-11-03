@@ -38,6 +38,8 @@ export class IncomeSourceController {
 
   @Delete()
   async deleteIncomeSource(@Body() dto: { incomeSourceId: number }) {
-    return this.incomeSourceService.deleteCostsGroup(dto.incomeSourceId);
+    return await this.incomeSourceService.deleteIncomeSource(
+      dto.incomeSourceId,
+    );
   }
 }

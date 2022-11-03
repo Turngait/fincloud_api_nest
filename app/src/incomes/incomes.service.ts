@@ -77,6 +77,26 @@ export class IncomesService {
     }
   }
 
+  // TODO In develop
+  async deleteIncomesBySourceID(source_id: number): Promise<{
+    status: number;
+    data: { isDeleted: boolean; msg: string };
+  }> {
+    try {
+      await this.incomeRepository
+        .createQueryBuilder()
+        .delete()
+        .from('income')
+        .where('source_id=:source_id', { source_id })
+        .execute();
+      return { status: 200, data: { isDeleted: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
+
   // TODO Move ti utils
   addGraphData(items) {
     const graphIncomes = [];

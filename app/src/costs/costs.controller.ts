@@ -77,7 +77,7 @@ export class CostsController {
         data: {
           cost: null,
           balance: null,
-          msg: changedAcc.data.msg,
+          msg: changedAcc ? changedAcc.data.msg : '',
         },
       };
     } catch (err) {
