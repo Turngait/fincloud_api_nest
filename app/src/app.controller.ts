@@ -32,6 +32,7 @@ export class AppController {
     return 'test';
   }
 
+  // TODO Move all this to another Module
   @Post('/getfindata')
   async getFinData(
     @Body() dto: { period: string; accountID: number },
@@ -47,11 +48,12 @@ export class AppController {
       dto.accountID,
     );
 
-    const { incomes } = await this.incomesService.getIncomesByPeriod(
-      dto.period,
-      headers.userId,
-      dto.accountID,
-    );
+    const { incomes, incomeGraphData } =
+      await this.incomesService.getIncomesByPeriod(
+        dto.period,
+        headers.userId,
+        dto.accountID,
+      );
 
     const { sources } = await this.incomeSourceService.getIncomesSources(
       headers.userId,
@@ -66,7 +68,7 @@ export class AppController {
     const { accounts } = await this.accountsService.getAccount(headers.userId);
     return {
       costs: { costs, groups, graphData },
-      incomes: { incomes, sources },
+      incomes: { incomes, sources, incomeGraphData },
       budgets,
       accounts,
     };

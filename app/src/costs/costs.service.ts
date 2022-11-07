@@ -106,7 +106,7 @@ export class CostsService {
     }
   }
 
-  // TODO Move ti utils
+  // TODO Move it utils
   addGraphData(costs) {
     const graphCosts = [];
     const graphDays = [];
@@ -127,7 +127,7 @@ export class CostsService {
     graphDays.reverse();
     return {
       days: [1, 2, 3],
-      costs: graphCosts,
+      items: graphCosts,
     };
   }
 

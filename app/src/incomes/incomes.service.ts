@@ -17,7 +17,11 @@ export class IncomesService {
     period: string,
     userId: number,
     accountID: number,
-  ): Promise<{ incomes: IncomeEntity[] | null; graphData: any; msg: string }> {
+  ): Promise<{
+    incomes: IncomeEntity[] | null;
+    incomeGraphData: any;
+    msg: string;
+  }> {
     try {
       const incomes = await this.incomeRepository.findBy({
         period,
@@ -25,11 +29,15 @@ export class IncomesService {
         account_id: accountID,
       });
       const graphData = this.addGraphData(incomes);
-      return { incomes: this.normalizeIncomes(incomes), graphData, msg: '' };
+      return {
+        incomes: this.normalizeIncomes(incomes),
+        incomeGraphData: graphData,
+        msg: '',
+      };
     } catch (err) {
       console.log(err);
       log(`From income service: ${err}`, LogLevels.ERROR);
-      return { incomes: null, graphData: null, msg: err };
+      return { incomes: null, incomeGraphData: null, msg: err };
     }
   }
 
@@ -118,7 +126,7 @@ export class IncomesService {
     graphDays.reverse();
     return {
       days: graphDays,
-      incomes: graphIncomes,
+      items: graphIncomes,
     };
   }
 
