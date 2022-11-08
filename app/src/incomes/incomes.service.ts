@@ -17,7 +17,11 @@ export class IncomesService {
     period: string,
     userId: number,
     accountID: number,
-  ): Promise<{ incomes: IncomeEntity[] | null; graphData: any; msg: string }> {
+  ): Promise<{
+    incomes: IncomeEntity[] | null;
+    incomeGraphData: any;
+    msg: string;
+  }> {
     try {
       const incomes = await this.incomeRepository.findBy({
         period,
@@ -25,11 +29,15 @@ export class IncomesService {
         account_id: accountID,
       });
       const graphData = this.addGraphData(incomes);
-      return { incomes: this.normalizeIncomes(incomes), graphData, msg: '' };
+      return {
+        incomes: this.normalizeIncomes(incomes),
+        incomeGraphData: graphData,
+        msg: '',
+      };
     } catch (err) {
       console.log(err);
       log(`From income service: ${err}`, LogLevels.ERROR);
-      return { incomes: null, graphData: null, msg: err };
+      return { incomes: null, incomeGraphData: null, msg: err };
     }
   }
 
@@ -77,6 +85,26 @@ export class IncomesService {
     }
   }
 
+  // TODO In develop
+  async deleteIncomesBySourceID(source_id: number): Promise<{
+    status: number;
+    data: { isDeleted: boolean; msg: string };
+  }> {
+    try {
+      await this.incomeRepository
+        .createQueryBuilder()
+        .delete()
+        .from('income')
+        .where('source_id=:source_id', { source_id })
+        .execute();
+      return { status: 200, data: { isDeleted: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
+
   // TODO Move ti utils
   addGraphData(items) {
     const graphIncomes = [];
@@ -98,7 +126,7 @@ export class IncomesService {
     graphDays.reverse();
     return {
       days: graphDays,
-      incomes: graphIncomes,
+      items: graphIncomes,
     };
   }
 

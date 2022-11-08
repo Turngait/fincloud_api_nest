@@ -57,6 +57,35 @@ export class CostsService {
     }
   }
 
+  // TODO In develop
+  async deleteCostByGroupId(group_id: number): Promise<{
+    status: number;
+    data: { isDeleted: boolean; msg: string; account_id: null | number };
+  }> {
+    try {
+      const costs = await this.costsRepository.findBy({ group_id });
+      let account_id = null;
+      if (costs && costs.length > 0) {
+        account_id = costs[0].account_id;
+        await this.costsRepository
+          .createQueryBuilder()
+          .delete()
+          .from('cost')
+          .where('group_id=:group_id', { group_id })
+          .execute();
+      }
+
+      return { status: 200, data: { isDeleted: true, msg: '', account_id } };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return {
+        status: 500,
+        data: { isDeleted: false, msg: err, account_id: null },
+      };
+    }
+  }
+
   async getCostsByPeriod(
     period: string,
     userId: number,
@@ -77,7 +106,7 @@ export class CostsService {
     }
   }
 
-  // TODO Move ti utils
+  // TODO Move it utils
   addGraphData(costs) {
     const graphCosts = [];
     const graphDays = [];
@@ -97,8 +126,8 @@ export class CostsService {
     graphCosts.reverse();
     graphDays.reverse();
     return {
-      days: graphDays,
-      costs: graphCosts,
+      days: [1, 2, 3],
+      items: graphCosts,
     };
   }
 
