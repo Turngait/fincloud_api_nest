@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
   Patch,
@@ -34,5 +35,10 @@ export class AccountsController {
   @Patch()
   async updateAccount(@Body() dto: { account: AccountDTO }): Promise<any> {
     return await this.accountsService.updateAccount(dto.account);
+  }
+
+  @Delete()
+  async deleteAccount(@Body() dto: { accountId: number }): Promise<any> {
+    return await this.accountsService.deleteAccount(dto.accountId);
   }
 }
