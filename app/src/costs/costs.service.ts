@@ -107,7 +107,12 @@ export class CostsService {
   }
 
   // TODO Move it utils
-  addGraphData(costs) {
+  addGraphData(items) {
+    const costs = items.sort((a, b) => {
+      if (new Date(a.date) > new Date(b.date)) return -1;
+      if (new Date(a.date) < new Date(b.date)) return 1;
+      return 0;
+    });
     const graphCosts = [];
     const graphDays = [];
     const days = new Set();
@@ -126,7 +131,7 @@ export class CostsService {
     graphCosts.reverse();
     graphDays.reverse();
     return {
-      days: [1, 2, 3],
+      days: graphDays,
       items: graphCosts,
     };
   }

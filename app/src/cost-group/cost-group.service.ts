@@ -69,6 +69,19 @@ export class CostGroupService {
     }
   }
 
+  async deleteAllGroupsByAccId(
+    account_id: number,
+  ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
+    try {
+      await this.costsGroupRepository.delete({ account_id });
+      return { status: 200, data: { isDeleted: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
+      return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
+
   async updateCostGroup(newGroup: ICostGroup): Promise<{
     status: number;
     data: { isUpdated: boolean; msg: string };
