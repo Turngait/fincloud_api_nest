@@ -106,7 +106,12 @@ export class IncomesService {
   }
 
   // TODO Move ti utils
-  addGraphData(items) {
+  addGraphData(incomes) {
+    const items = incomes.sort((a, b) => {
+      if (new Date(a.date) > new Date(b.date)) return -1;
+      if (new Date(a.date) < new Date(b.date)) return 1;
+      return 0;
+    });
     const graphIncomes = [];
     const graphDays = [];
     const days = new Set();

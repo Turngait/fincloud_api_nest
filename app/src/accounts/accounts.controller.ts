@@ -1,20 +1,29 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Headers,
-  Patch,
+  Put,
   Post,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { BudgetsService } from 'src/budgets/budgets.service';
+import { CostGroupService } from 'src/cost-group/cost-group.service';
+import { IncomeSourceService } from 'src/income-source/income-source.service';
 
 import { AccountDTO } from './accounts.dto';
 import { AccountsService } from './accounts.service';
 
 @Controller('accounts')
 export class AccountsController {
-  constructor(private readonly accountsService: AccountsService) {}
+  constructor(
+    private readonly accountsService: AccountsService,
+    private readonly budgetsService: BudgetsService,
+    private readonly costGroupsService: CostGroupService,
+    private readonly incomeSourcesService: IncomeSourceService,
+  ) {}
 
   @Get()
   async getAccount(@Headers() headers: any): Promise<any> {
@@ -27,12 +36,62 @@ export class AccountsController {
     @Body() dto: { account: AccountDTO },
     @Headers() headers: any,
   ): Promise<any> {
-    return await this.accountsService.addAccount(dto.account, headers.userId);
+    const result = await this.accountsService.addAccount(
+      dto.account,
+      headers.userId,
+    );
+
+    if (result.status === 202) {
+      await this.budgetsService.addBudget(
+        headers.userId,
+        dto.account.title,
+        dto.account.description,
+        true,
+        result.data.account.id,
+        dto.account.balance,
+      );
+
+      await this.costGroupsService.addGroup(
+        dto.account.title,
+        '',
+        headers.userId,
+        result.data.account.id,
+        0,
+      );
+
+      await this.incomeSourcesService.addSource(
+        dto.account.title,
+        '',
+        headers.userId,
+        result.data.account.id,
+        0,
+      );
+    }
+    return result;
   }
 
   @UsePipes(new ValidationPipe())
-  @Patch()
+  @Put()
   async updateAccount(@Body() dto: { account: AccountDTO }): Promise<any> {
     return await this.accountsService.updateAccount(dto.account);
+  }
+
+  @Delete()
+  async deleteAccount(
+    @Body() dto: { accountId: number },
+    @Headers() headers: any,
+  ): Promise<any> {
+    const result = await this.accountsService.deleteAccount(
+      dto.accountId,
+      headers.userId,
+    );
+
+    if (result.status === 200) {
+      await this.budgetsService.deleteBudgetsByAccID(dto.accountId);
+      await this.incomeSourcesService.deleteAllSourcesByAccId(dto.accountId);
+      await this.costGroupsService.deleteAllGroupsByAccId(dto.accountId);
+    }
+
+    return result;
   }
 }

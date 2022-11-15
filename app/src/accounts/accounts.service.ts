@@ -72,9 +72,10 @@ export class AccountsService {
 
   async deleteAccount(
     accountID: number,
+    user_id: number,
   ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
     try {
-      await this.accountsRepository.delete(accountID);
+      await this.accountsRepository.delete({ id: accountID, user_id });
       return { status: 200, data: { isDeleted: true, msg: '' } };
     } catch (err) {
       console.log(err);
