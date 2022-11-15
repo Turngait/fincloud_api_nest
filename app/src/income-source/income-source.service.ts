@@ -73,6 +73,19 @@ export class IncomeSourceService {
     }
   }
 
+  async deleteAllSourcesByAccId(
+    account_id: number,
+  ): Promise<{ status: number; data: { isDeleted: boolean; msg: string } }> {
+    try {
+      await this.incomeSourceRepository.delete({ account_id });
+      return { status: 200, data: { isDeleted: true, msg: '' } };
+    } catch (err) {
+      console.log(err);
+      log(`From costGroup service: ${err}`, LogLevels.ERROR);
+      return { status: 500, data: { isDeleted: false, msg: err } };
+    }
+  }
+
   async updateIncomeSource(newSource: IIncomeSources): Promise<{
     status: number;
     data: { isUpdated: boolean; msg: string };
