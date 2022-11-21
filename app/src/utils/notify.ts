@@ -14,7 +14,7 @@ interface INotifyData {
 export async function sendNotificationByMail(
   data: INotifyData,
 ): Promise<{ status: number; msg: string }> {
-  return await fetch(NOTIFY_URL, {
+  return await fetch(NOTIFY_URL + 'mail/send', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),

@@ -1,9 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
 import UserEntity from './users.entity';
-import { createPaper, createPassword, createToken } from 'src/config/sec';
+import {
+  createPaper,
+  createPassword,
+  createToken,
+  generatePass,
+} from 'src/config/sec';
 import { dateToday } from '../utils/date';
 import log, { LogLevels } from 'src/logger';
 @Injectable()
@@ -147,7 +152,7 @@ export class UsersService {
   ): Promise<{ status: number; data: { isUpdated: boolean; msg: string } }> {
     try {
       const { user } = await this.getUserByToken(token);
-      if (!user) throw new NotFoundException();
+      if (!user) throw new BadRequestException();
       user.name = newName;
       await this.userRepository.save(user);
       return { status: 200, data: { isUpdated: true, msg: '' } };
@@ -155,6 +160,30 @@ export class UsersService {
       console.log(err);
       log(`From user service: ${err}`, LogLevels.ERROR);
       return { status: 500, data: { isUpdated: false, msg: err } };
+    }
+  }
+
+  async restorePass(email: string): Promise<{
+    status: number;
+    data: { isUpdated: boolean; pass: string; name: string; msg: string };
+  }> {
+    try {
+      const user = await this.getUserByEmail(email);
+      if (!user) throw new BadRequestException();
+      const pass = generatePass(email);
+      user.pass = createPassword(pass, user.paper);
+      await this.userRepository.save(user);
+      return {
+        status: 200,
+        data: { isUpdated: true, pass, name: user.name, msg: '' },
+      };
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return {
+        status: 500,
+        data: { isUpdated: false, pass: null, name: null, msg: err },
+      };
     }
   }
 }
