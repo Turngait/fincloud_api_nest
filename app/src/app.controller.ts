@@ -6,8 +6,10 @@ import { CostGroupService } from './cost-group/cost-group.service';
 import { CostsService } from './costs/costs.service';
 import { IncomeSourceService } from './income-source/income-source.service';
 import { IncomesService } from './incomes/incomes.service';
+import { NotifyTypes } from './interfaces/common';
 import log from './logger';
 import { dateToday } from './utils/date';
+import { sendNotificationByMail } from './utils/notify';
 
 @Controller()
 export class AppController {
@@ -128,6 +130,14 @@ export class AppController {
         account.data.account.id,
       );
       result.data.accountId = account.data.account.id;
+
+      // TODO Move to middleware
+      sendNotificationByMail({
+        to: dto.email,
+        name: dto.name,
+        pass: dto.pass,
+        type: NotifyTypes.signUp,
+      });
       return result;
     }
     return result;
@@ -143,11 +153,12 @@ export class AppController {
     @Body() dto: { oldPass: string; newPass: string },
     @Headers() headers: any,
   ) {
-    return await this.appService.changeUserPass(
+    const result = await this.appService.changeUserPass(
       headers.token,
       dto.oldPass,
       dto.newPass,
     );
+    return result;
   }
 
   @Post('/user/getdata')
@@ -163,5 +174,20 @@ export class AppController {
     );
     const { balance } = await this.accountsService.getBalance(dto.accountId);
     return { userData, balance, groups, sources };
+  }
+
+  @Post('/user/restorepass')
+  async restorePass(@Body() dto: { email: string }) {
+    const result = await this.appService.restorePass(dto.email);
+    if (result.status === 200) {
+      sendNotificationByMail({
+        to: dto.email,
+        name: result.data.name,
+        pass: result.data.pass,
+        type: NotifyTypes.restorePwd,
+      });
+    }
+
+    return result;
   }
 }

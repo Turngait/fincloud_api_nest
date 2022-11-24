@@ -21,3 +21,8 @@ export function createHashForRecovery(email): string {
     .update(email + SALT2)
     .digest('hex');
 }
+
+export function generatePass(email: string): string {
+  const newPass = createHash('md5').update(email).digest('hex');
+  return newPass.slice(0, 10);
+}

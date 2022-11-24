@@ -9,6 +9,7 @@ export class AppService {
     return 'Hello World!';
   }
 
+  // TODO Move user's methods to another module
   async signIn(
     email: string,
     pass: string,
@@ -71,6 +72,18 @@ export class AppService {
     const result = await fetch(AUTH_URL + 'users/changename', {
       method: 'PUT',
       body: JSON.stringify({ token, name }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    return result;
+  }
+
+  async restorePass(email: string): Promise<{
+    status: number;
+    data: { isUpdated: boolean; pass: string; name: string; msg: string };
+  }> {
+    const result = await fetch(AUTH_URL + 'users/restorepass', {
+      method: 'PUT',
+      body: JSON.stringify({ email }),
       headers: { 'Content-Type': 'application/json' },
     }).then((res) => res.json());
     return result;

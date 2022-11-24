@@ -50,4 +50,8 @@ export class UsersController {
   async getUserData(@Body() dto: { token: string }) {
     return await this.userService.getUserData(dto.token);
   }
+  @Put('/restorepass')
+  async restoreUserPass(@Body() dto: { email: string }) {
+    return await this.userService.restorePass(dto.email);
+  }
 }
