@@ -15,6 +15,7 @@ services:
   fc-api:
     image: "node:18"
     container_name: fc-api
+    restart: always
     working_dir: /home/node/app
     volumes:
       - ./app:/home/node/app
@@ -40,6 +41,7 @@ services:
   fc-auth:
     image: "node:18"
     container_name: fc-auth
+    restart: always
     working_dir: /home/node/app
     volumes:
       - ./auth:/home/node/app
@@ -59,6 +61,7 @@ services:
     image: "node:18"
     container_name: fc-notify
     working_dir: /home/node/app
+    restart: always
     volumes:
       - ./notify:/home/node/app
     command: npm run dev
