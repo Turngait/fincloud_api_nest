@@ -27,8 +27,8 @@ services:
       - SALT2=${SALT2}
       - APP_NAME=${APP_NAME}
       - API_KEY=${API_KEY}
-      - DB_USERNAME={DB_USER}
-      - DB_PASS={DB_PASS}
+      - DB_USERNAME=root
+      - DB_PASS=example
     depends_on:
       - db
       - fc-auth
@@ -46,8 +46,8 @@ services:
       - SALT=${SALT}
       - SALT2=${SALT2}
       - APP_NAME=${APP_NAME}
-      - DB_USERNAME={DB_USER}
-      - DB_PASS={DB_PASS}
+      - DB_USERNAME=root
+      - DB_PASS=example
     depends_on:
       - db
     
@@ -69,7 +69,7 @@ services:
     volumes: 
       - ./db/mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=${DB_PASS}
+      - MYSQL_ROOT_PASSWORD=example
 
   # myadmin:
   #   image: phpmyadmin/phpmyadmin
