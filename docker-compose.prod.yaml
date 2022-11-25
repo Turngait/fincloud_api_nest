@@ -69,7 +69,7 @@ services:
     volumes: 
       - ./db/mysql:/var/lib/mysql
     environment:
-      - MYSQL_ROOT_PASSWORD=example
+      MYSQL_ROOT_PASSWORD: example
 
   # myadmin:
   #   image: phpmyadmin/phpmyadmin
