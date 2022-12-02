@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Headers, Put } from '@nestjs/common';
+import { Body, Controller, Get, Post, Headers, Put, Res } from '@nestjs/common';
 import { AccountsService } from './accounts/accounts.service';
 import { AppService } from './app.service';
 import { BudgetsService } from './budgets/budgets.service';
@@ -29,8 +29,10 @@ export class AppController {
   }
 
   @Get('/test')
-  async test() {
+  async test(@Res({ passthrough: true }) response: any) {
     log('Hello. It is test');
+    // console.log(response.status(400));
+    response.status(203);
     return 'test';
   }
 
@@ -39,6 +41,7 @@ export class AppController {
   async getFinData(
     @Body() dto: { period: string; accountID: number },
     @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
   ) {
     const { costs, graphData } = await this.costsService.getCostsByPeriod(
       dto.period,
@@ -68,6 +71,7 @@ export class AppController {
     );
 
     const { accounts } = await this.accountsService.getAccount(headers.userId);
+    response.status(200);
     return {
       costs: { costs, groups, graphData },
       incomes: { incomes, sources, incomeGraphData },
@@ -77,9 +81,13 @@ export class AppController {
   }
 
   @Post('/user/signin')
-  async signIn(@Body() dto: { email: string; pass: string }) {
+  async signIn(
+    @Body() dto: { email: string; pass: string },
+    @Res({ passthrough: true }) response: any,
+  ) {
     const user = await this.appService.signIn(dto.email, dto.pass);
     const { accounts } = await this.accountsService.getAccount(user.id);
+    response.status(user.status);
     return { user, account: accounts[0] };
   }
 
@@ -94,8 +102,10 @@ export class AppController {
       currency: string;
       initialBalance: number;
     },
+    @Res({ passthrough: true }) response: any,
   ) {
     const result = await this.appService.signUp(dto.email, dto.pass, dto.name);
+    response.status(result.status);
     if (result && result.status && result.status === 202) {
       const newAcc = {
         title: dto.accountTitle,
@@ -144,25 +154,36 @@ export class AppController {
   }
 
   @Put('/user/setname')
-  async changeName(@Body() dto: { name: string }, @Headers() headers: any) {
-    return await this.appService.setNewName(headers.token, dto.name);
+  async changeName(
+    @Body() dto: { name: string },
+    @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.appService.setNewName(headers.token, dto.name);
+    response.status(result.status);
+    return result;
   }
 
   @Put('/user/changepassword')
   async changePass(
     @Body() dto: { oldPass: string; newPass: string },
     @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
   ) {
     const result = await this.appService.changeUserPass(
       headers.token,
       dto.oldPass,
       dto.newPass,
     );
+    response.status(result.status);
     return result;
   }
 
   @Post('/user/getdata')
-  async getUserData(@Body() dto: { token: string; accountId: number }) {
+  async getUserData(
+    @Body() dto: { token: string; accountId: number },
+    @Res({ passthrough: true }) response: any,
+  ) {
     const userData = await this.appService.getUserData(dto.token);
     const { groups } = await this.costGroupService.getCostsGroups(
       userData.id,
@@ -173,12 +194,17 @@ export class AppController {
       dto.accountId,
     );
     const { balance } = await this.accountsService.getBalance(dto.accountId);
+    if (!userData) response.status(500);
     return { userData, balance, groups, sources };
   }
 
   @Post('/user/restorepass')
-  async restorePass(@Body() dto: { email: string }) {
+  async restorePass(
+    @Body() dto: { email: string },
+    @Res({ passthrough: true }) response: any,
+  ) {
     const result = await this.appService.restorePass(dto.email);
+    response.status(result.status);
     if (result.status === 200) {
       sendNotificationByMail({
         to: dto.email,

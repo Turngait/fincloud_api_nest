@@ -8,6 +8,7 @@ import {
   Post,
   UsePipes,
   ValidationPipe,
+  Res,
 } from '@nestjs/common';
 import { BudgetsService } from 'src/budgets/budgets.service';
 import { CostGroupService } from 'src/cost-group/cost-group.service';
@@ -35,11 +36,13 @@ export class AccountsController {
   async addAccount(
     @Body() dto: { account: AccountDTO },
     @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
   ): Promise<any> {
     const result = await this.accountsService.addAccount(
       dto.account,
       headers.userId,
     );
+    response.status(result.status);
 
     if (result.status === 202) {
       await this.budgetsService.addBudget(
@@ -72,20 +75,26 @@ export class AccountsController {
 
   @UsePipes(new ValidationPipe())
   @Put()
-  async updateAccount(@Body() dto: { account: AccountDTO }): Promise<any> {
-    return await this.accountsService.updateAccount(dto.account);
+  async updateAccount(
+    @Body() dto: { account: AccountDTO },
+    @Res({ passthrough: true }) response: any,
+  ): Promise<any> {
+    const result = await this.accountsService.updateAccount(dto.account);
+    response.status(result.status);
+    return result;
   }
 
   @Delete()
   async deleteAccount(
     @Body() dto: { accountId: number },
     @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
   ): Promise<any> {
     const result = await this.accountsService.deleteAccount(
       dto.accountId,
       headers.userId,
     );
-
+    response.status(result.status);
     if (result.status === 200) {
       await this.budgetsService.deleteBudgetsByAccID(dto.accountId);
       await this.incomeSourcesService.deleteAllSourcesByAccId(dto.accountId);

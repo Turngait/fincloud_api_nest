@@ -6,6 +6,7 @@ import {
   Headers,
   UsePipes,
   ValidationPipe,
+  Res,
 } from '@nestjs/common';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
@@ -23,8 +24,13 @@ export class CostsController {
 
   @UsePipes(new ValidationPipe())
   @Post()
-  async addCost(@Body() dto: { cost: CostDTO }, @Headers() headers: any) {
+  async addCost(
+    @Body() dto: { cost: CostDTO },
+    @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
     const addedCost = await this.costService.addCost(dto.cost, headers.userId);
+    response.status(addedCost.status);
     return await this.changeBalances(
       dto.cost,
       addedCost.status,
@@ -34,8 +40,12 @@ export class CostsController {
 
   @UsePipes(new ValidationPipe())
   @Delete()
-  async deleteCost(@Body() dto: { cost: CostDTO }) {
+  async deleteCost(
+    @Body() dto: { cost: CostDTO },
+    @Res({ passthrough: true }) response: any,
+  ) {
     const resultCost = await this.costService.deleteCost(dto.cost.id);
+    response.status(resultCost.status);
     return await this.changeBalances(
       dto.cost,
       resultCost.status,

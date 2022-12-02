@@ -7,6 +7,7 @@ import {
   UsePipes,
   ValidationPipe,
   Put,
+  Res,
 } from '@nestjs/common';
 import { BudgetDTO } from './budgets.dto';
 import { BudgetsService } from './budgets.service';
@@ -17,24 +18,41 @@ export class BudgetsController {
 
   @UsePipes(new ValidationPipe())
   @Post()
-  async addBudget(@Body() dto: { budget: BudgetDTO }, @Headers() headers: any) {
-    return await this.budgetService.addBudget(
+  async addBudget(
+    @Body() dto: { budget: BudgetDTO },
+    @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.budgetService.addBudget(
       headers.userId,
       dto.budget.title,
       dto.budget.description,
       dto.budget.is_calculating,
       dto.budget.account_id,
     );
+
+    response.status(result.status);
+    return result;
   }
 
   @UsePipes(new ValidationPipe())
   @Put()
-  async updateBudget(@Body() dto: { budget: BudgetDTO }) {
-    return await this.budgetService.editBudget(dto.budget);
+  async updateBudget(
+    @Body() dto: { budget: BudgetDTO },
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.budgetService.editBudget(dto.budget);
+    response.status(result.status);
+    return result;
   }
 
   @Delete()
-  async deleteBudget(@Body() dto: { budgetId: number }) {
-    return await this.budgetService.deleteBudget(dto.budgetId);
+  async deleteBudget(
+    @Body() dto: { budgetId: number },
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.budgetService.deleteBudget(dto.budgetId);
+    response.status(result);
+    return result;
   }
 }
