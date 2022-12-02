@@ -6,6 +6,7 @@ import {
   Body,
   UsePipes,
   ValidationPipe,
+  Res,
 } from '@nestjs/common';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
@@ -23,11 +24,16 @@ export class IncomesController {
 
   @UsePipes(new ValidationPipe())
   @Post()
-  async addIncome(@Body() dto: { income: IncomeDTO }, @Headers() headers: any) {
+  async addIncome(
+    @Body() dto: { income: IncomeDTO },
+    @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
     const addedIncome = await this.incomesService.addIncome(
       dto.income,
       headers.userId,
     );
+    response.status(addedIncome.status);
     return await this.changeBalances(
       dto.income,
       addedIncome.status,
@@ -37,8 +43,12 @@ export class IncomesController {
 
   @UsePipes(new ValidationPipe())
   @Delete()
-  async deleteIncome(@Body() dto: { income: IncomeDTO }) {
+  async deleteIncome(
+    @Body() dto: { income: IncomeDTO },
+    @Res({ passthrough: true }) response: any,
+  ) {
     const resultIncome = await this.incomesService.deleteIncome(dto.income.id);
+    response.status(resultIncome.status);
     return await this.changeBalances(
       dto.income,
       resultIncome.status,
