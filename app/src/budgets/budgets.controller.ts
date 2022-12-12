@@ -52,7 +52,7 @@ export class BudgetsController {
     @Res({ passthrough: true }) response: any,
   ) {
     const result = await this.budgetService.deleteBudget(dto.budgetId);
-    response.status(result);
+    response.status(result.status);
     return result;
   }
 }
