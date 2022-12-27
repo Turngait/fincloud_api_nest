@@ -11,6 +11,7 @@ import log from './logger';
 import { dateToday } from './utils/date';
 import { sendNotificationByMail } from './utils/notify';
 
+// TODO Move all this code to another modules
 @Controller()
 export class AppController {
   constructor(
