@@ -11,11 +11,15 @@ import {
 } from 'src/config/sec';
 import { dateToday } from '../utils/date';
 import log, { LogLevels } from 'src/logger';
+import UserTokens from './user-tokens.entity';
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UserEntity)
     private userRepository: Repository<UserEntity>,
+
+    @InjectRepository(UserTokens)
+    private userTokensRepository: Repository<UserTokens>,
   ) {}
 
   getTest() {
@@ -53,7 +57,14 @@ export class UsersService {
       const user = await this.userRepository.findOneBy({ email });
       if (user && user.pass === createPassword(pass, user.paper)) {
         user.token = createToken();
+
+        const userToken = new UserTokens();
+        userToken.user_id = user.id;
+        userToken.token = user.token;
+        userToken.created_at = dateToday();
+
         await this.userRepository.save(user);
+        await this.userTokensRepository.save(userToken);
         return { status: 200, token: user.token, id: user.id, msg: '' };
       } else {
         return {

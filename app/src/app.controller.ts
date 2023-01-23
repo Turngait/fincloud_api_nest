@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Headers, Put, Res } from '@nestjs/common';
+import { Body, Controller, Post, Headers, Put, Res } from '@nestjs/common';
 import { AccountsService } from './accounts/accounts.service';
 import { AppService } from './app.service';
 import { BudgetsService } from './budgets/budgets.service';
@@ -7,7 +7,6 @@ import { CostsService } from './costs/costs.service';
 import { IncomeSourceService } from './income-source/income-source.service';
 import { IncomesService } from './incomes/incomes.service';
 import { NotifyTypes } from './interfaces/common';
-import log from './logger';
 import { dateToday } from './utils/date';
 import { sendNotificationByMail } from './utils/notify';
 
@@ -24,18 +23,13 @@ export class AppController {
     private readonly accountsService: AccountsService,
   ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
-  }
-
-  @Get('/test')
-  async test(@Res({ passthrough: true }) response: any) {
-    log('Hello. It is test');
-    // console.log(response.status(400));
-    response.status(203);
-    return 'test';
-  }
+  // @Get('/test')
+  // async test(@Res({ passthrough: true }) response: any) {
+  //   log('Hello. It is test');
+  //   // console.log(response.status(400));
+  //   response.status(203);
+  //   return 'test';
+  // }
 
   // TODO Move all this to another Module
   @Post('/getfindata')

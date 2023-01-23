@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 
 import UserEntity from './users/users.entity';
+import UserTokensEntity from './users/user-tokens.entity';
 
 import DB_CONF from './config/db';
 
@@ -20,7 +21,7 @@ import DB_CONF from './config/db';
       username: DB_CONF.DB_USERNAME,
       password: DB_CONF.DB_PASS,
       database: DB_CONF.DB_NAME,
-      entities: [UserEntity],
+      entities: [UserEntity, UserTokensEntity],
       synchronize: true,
     }),
     UsersModule,
