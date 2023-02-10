@@ -62,6 +62,7 @@ export class IncomesController {
     typeOfOp: TypeOfOps,
   ): Promise<any> {
     let changedAcc = null;
+    // TODO Change that logic
     if (initStatus === 200 || initStatus === 202) {
       changedAcc = await this.accountService.changeBalance(
         income.account_id,

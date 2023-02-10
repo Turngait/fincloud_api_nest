@@ -60,6 +60,7 @@ export class CostsController {
   ): Promise<any> {
     try {
       let changedAcc = null;
+      // TODO Change that logic
       if (initStatus === 200 || initStatus === 202) {
         changedAcc = await this.accountService.changeBalance(
           cost.account_id,
