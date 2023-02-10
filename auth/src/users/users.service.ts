@@ -44,6 +44,7 @@ export class UsersService {
 
     try {
       await this.userRepository.save(user);
+      await this.saveUserToken(user);
       return { status: 202, data: { token: user.token, msg: '', id: user.id } };
     } catch (err) {
       console.log(err);
@@ -57,14 +58,8 @@ export class UsersService {
       const user = await this.userRepository.findOneBy({ email });
       if (user && user.pass === createPassword(pass, user.paper)) {
         user.token = createToken();
-
-        const userToken = new UserTokens();
-        userToken.user_id = user.id;
-        userToken.token = user.token;
-        userToken.created_at = dateToday();
-
         await this.userRepository.save(user);
-        await this.userTokensRepository.save(userToken);
+        await this.saveUserToken(user);
         return { status: 200, token: user.token, id: user.id, msg: '' };
       } else {
         return {
@@ -96,8 +91,9 @@ export class UsersService {
     data: { id: number | null; msg: string; token: string };
   }> {
     try {
-      const user = await this.userRepository.findOneBy({ token });
-      if (user) return { status: 200, data: { id: user.id, msg: '', token } };
+      const userToken = await this.userTokensRepository.findOneBy({ token });
+      if (userToken)
+        return { status: 200, data: { id: userToken.user_id, msg: '', token } };
       else
         return { status: 404, data: { id: null, msg: 'Wrong token', token } };
     } catch (err) {
@@ -111,7 +107,8 @@ export class UsersService {
     token: string,
   ): Promise<{ user: UserEntity | null; msg: string; token: string }> {
     try {
-      const user = await this.userRepository.findOneBy({ token });
+      const { data } = await this.getUserIdByToken(token);
+      const user = await this.userRepository.findOneBy({ id: data.id });
       if (user) return { user, msg: '', token };
       else return { user: null, msg: 'Wrong token', token };
     } catch (err) {
@@ -195,6 +192,21 @@ export class UsersService {
         status: 500,
         data: { isUpdated: false, pass: null, name: null, msg: err },
       };
+    }
+  }
+
+  async saveUserToken(user: UserEntity): Promise<string | null> {
+    const userToken = new UserTokens();
+    userToken.user_id = user.id;
+    userToken.token = user.token;
+    userToken.created_at = user.created_at;
+    try {
+      await this.userTokensRepository.save(userToken);
+      return userToken.token;
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return null;
     }
   }
 }
