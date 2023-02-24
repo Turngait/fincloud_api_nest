@@ -81,3 +81,13 @@ export enum NotifyTypes {
   restorePwd = 'pass_is_changed',
   msgToUs = 'msg_to_admin',
 }
+
+export interface ITarget {
+  id?: number;
+  amount: number;
+  type: string;
+  created_at: string;
+  group_id: number;
+  user_id: number;
+  account_id: number;
+}
