@@ -4,6 +4,7 @@ import { IncomeSourceService } from './income-source/income-source.service';
 import { CostsService } from './costs/costs.service';
 import { IncomesService } from './incomes/incomes.service';
 import { AccountsService } from './accounts/accounts.service';
+import { TargetsService } from './costs/targets/targets.service';
 
 export default [
   BudgetsService,
@@ -12,4 +13,5 @@ export default [
   CostsService,
   IncomesService,
   AccountsService,
+  TargetsService,
 ];

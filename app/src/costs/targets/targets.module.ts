@@ -9,5 +9,6 @@ import TargetEntity from './targets.entity';
   imports: [TypeOrmModule.forFeature([TargetEntity])],
   controllers: [TargetsController],
   providers: [TargetsService],
+  exports: [TypeOrmModule, TargetsService],
 })
 export class TargetsModule {}

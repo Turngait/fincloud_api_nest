@@ -31,11 +31,11 @@ export class TargetsController {
   @UsePipes(new ValidationPipe())
   @Post()
   async addTarget(
-    @Body() dto: TargetDTO,
+    @Body() dto: { target: TargetDTO },
     @Headers() header: any,
     @Res({ passthrough: true }) response: any,
   ): Promise<any> {
-    const data = await this.targetsService.addTarget(dto, header.userId);
+    const data = await this.targetsService.addTarget(dto.target, header.userId);
     response.status(data.status);
     return data;
   }

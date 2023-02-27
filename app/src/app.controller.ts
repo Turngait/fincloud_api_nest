@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { BudgetsService } from './budgets/budgets.service';
 import { CostGroupService } from './cost-group/cost-group.service';
 import { CostsService } from './costs/costs.service';
+import { TargetsService } from './costs/targets/targets.service';
 import { IncomeSourceService } from './income-source/income-source.service';
 import { IncomesService } from './incomes/incomes.service';
 import { NotifyTypes } from './interfaces/common';
@@ -21,6 +22,7 @@ export class AppController {
     private readonly costsService: CostsService,
     private readonly incomesService: IncomesService,
     private readonly accountsService: AccountsService,
+    private readonly targetsService: TargetsService,
   ) {}
 
   // @Get('/test')
@@ -66,12 +68,17 @@ export class AppController {
     );
 
     const { accounts } = await this.accountsService.getAccount(headers.userId);
+
+    const { data } = await this.targetsService.getAllTargetsForAccount(
+      dto.accountID,
+    );
     response.status(200);
     return {
       costs: { costs, groups, graphData },
       incomes: { incomes, sources, incomeGraphData },
       budgets,
       accounts,
+      targets: data.targets,
     };
   }
 

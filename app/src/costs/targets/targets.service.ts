@@ -14,14 +14,17 @@ export class TargetsService {
     private targetsRepository: Repository<TargetEntity>,
   ) {}
 
-  async getAllTargetsForAccount(account_id: number): Promise<any> {
+  async getAllTargetsForAccount(account_id: number): Promise<{
+    status: number;
+    data: { targets: TargetEntity[] | null; msg: string };
+  }> {
     try {
       const targets = await this.targetsRepository.findBy({ account_id });
       return { status: 200, data: { targets, msg: '' } };
     } catch (err) {
       console.log(err);
       log(`From target service: ${err}`, LogLevels.ERROR);
-      return { status: 500, data: { target: null, msg: err } };
+      return { status: 500, data: { targets: null, msg: err } };
     }
   }
 
@@ -32,7 +35,7 @@ export class TargetsService {
     status: number;
     data: { target: TargetEntity | null; msg: string };
   }> {
-    if (!(await this.isTargetExist(target.account_id, target.type))) {
+    if (await this.isTargetExist(target.account_id, target.type)) {
       return {
         status: 400,
         data: { target: null, msg: 'Target already exist' },

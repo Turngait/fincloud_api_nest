@@ -49,6 +49,7 @@ export class AppModule {
         'incomes',
         'accounts',
         'getfindata',
+        'targets',
       );
   }
 }

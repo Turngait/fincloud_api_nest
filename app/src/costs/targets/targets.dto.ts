@@ -9,13 +9,11 @@ export class TargetDTO {
   @IsString()
   type: string;
 
-  @IsString()
   created_at: string;
 
   @IsNumber()
   group_id: number;
 
-  @IsNumber()
   user_id: number;
 
   @IsNumber()
