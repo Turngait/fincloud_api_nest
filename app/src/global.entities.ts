@@ -5,6 +5,7 @@ import CostGroupEntity from './cost-group/cost-group.entity';
 import IncomeSourceEntity from './income-source/income-source.entity';
 import UserInfoEntity from './user-info/user-info.entity';
 import AccountEntity from './accounts/accounts.entity';
+import TargetEntity from './costs/targets/targets.entity';
 
 export default [
   CostEntity,
@@ -14,4 +15,5 @@ export default [
   IncomeSourceEntity,
   UserInfoEntity,
   AccountEntity,
+  TargetEntity,
 ];
