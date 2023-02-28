@@ -72,6 +72,7 @@ export class AppController {
     const { data } = await this.targetsService.getAllTargetsForAccount(
       dto.accountID,
     );
+    // this.targetsService.calculateMonthlyTargets(data.targets.month, costs);
     response.status(200);
     return {
       costs: { costs, groups, graphData },

@@ -3,6 +3,8 @@ import {
   Controller,
   Post,
   Get,
+  Delete,
+  Put,
   Headers,
   Res,
   UsePipes,
@@ -36,6 +38,31 @@ export class TargetsController {
     @Res({ passthrough: true }) response: any,
   ): Promise<any> {
     const data = await this.targetsService.addTarget(dto.target, header.userId);
+    response.status(data.status);
+    return data;
+  }
+
+  @Delete()
+  async deleteTarget(
+    @Body() dto: { id: number },
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const data = await this.targetsService.deleteTarget(dto.id);
+    response.status(data.status);
+    return data;
+  }
+
+  @UsePipes(new ValidationPipe())
+  @Put()
+  async editTarget(
+    @Body() dto: { target: TargetDTO },
+    @Headers() header: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const data = await this.targetsService.editTarget(
+      dto.target,
+      header.userId,
+    );
     response.status(data.status);
     return data;
   }
