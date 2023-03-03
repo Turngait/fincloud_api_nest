@@ -9,10 +9,12 @@ import { AccountsService } from 'src/accounts/accounts.service';
 import AccountEntity from 'src/accounts/accounts.entity';
 import BudgetEntity from 'src/budgets/budgets.entity';
 import { BudgetsService } from 'src/budgets/budgets.service';
+import { TargetsModule } from './targets/targets.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([CostEntity, AccountEntity, BudgetEntity]),
+    TargetsModule,
   ],
   controllers: [CostsController],
   providers: [CostsService, AccountsService, BudgetsService],
