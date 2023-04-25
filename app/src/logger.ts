@@ -7,13 +7,13 @@ export enum LogLevels {
 
 function log(msg, level: LogLevels = LogLevels.INFO) {
   const logger = winston.createLogger({
-    level: 'info',
+    level,
     format: winston.format.json(),
     defaultMeta: { service: 'user-service' },
     transports: [
       new winston.transports.File({
         filename: 'logs/error.log',
-        level: 'error',
+        level,
       }),
       new winston.transports.File({ filename: 'logs/info.log' }),
     ],

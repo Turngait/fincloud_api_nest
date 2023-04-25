@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 import { CheckApiKeysMiddleware, CheckTokenMiddleware } from './app.middleware';
+import { FinanceModule } from './finance/finance.module';
 
 import DB_CONF from './config/db';
 
@@ -27,6 +28,7 @@ import entities from './global.entities';
       synchronize: true,
     }),
     ...modules,
+    FinanceModule,
   ],
   controllers: [AppController],
   providers: [AppService, ...providers],

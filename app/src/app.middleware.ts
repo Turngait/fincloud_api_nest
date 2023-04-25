@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Request, Response, NextFunction } from 'express';
-import { AppService } from './app.service';
+import { UsersService } from './users/users.service';
 
 @Injectable()
 export class CheckApiKeysMiddleware implements NestMiddleware {
@@ -25,7 +25,7 @@ export class CheckApiKeysMiddleware implements NestMiddleware {
 
 @Injectable()
 export class CheckTokenMiddleware implements NestMiddleware {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
     if (
@@ -33,7 +33,7 @@ export class CheckTokenMiddleware implements NestMiddleware {
       req.headers.token &&
       typeof req.headers.token === 'string'
     ) {
-      const id = await this.appService.getUserIdByToken(req.headers.token);
+      const id = await this.usersService.getUserIdByToken(req.headers.token);
       if (!id && typeof id !== 'number') {
         res.json({
           status: 403,

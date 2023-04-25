@@ -6,6 +6,7 @@ import { IncomeSourceModule } from './income-source/income-source.module';
 import { UserInfoModule } from './user-info/user-info.module';
 import { AccountsModule } from './accounts/accounts.module';
 import { TargetsModule } from './costs/targets/targets.module';
+import { UsersModule } from './users/users.module';
 
 export default [
   CostsModule,
@@ -16,4 +17,5 @@ export default [
   UserInfoModule,
   AccountsModule,
   TargetsModule,
+  UsersModule,
 ];
