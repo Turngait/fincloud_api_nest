@@ -74,6 +74,16 @@ services:
     depends_on:
       - db
 
+  composer:
+    image: composer:2.0.9
+    container_name: composer-users
+    working_dir: /app
+    command: composer install
+    volumes:
+      - './users:/app'
+    depends_on:
+      - users
+
   fc-notify:
     image: "node:18"
     container_name: fc-notify

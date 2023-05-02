@@ -43,7 +43,8 @@ class User extends Model
      * 
      * @return array
      */
-    public function signIn(string $email, string $pass): array {
+    public function signIn(string $email, string $pass): array
+    {
         $user = $this->getUserByEmail($email);
         if(!$user) return ["status" => 403, "id" => null];
 
@@ -62,7 +63,8 @@ class User extends Model
      * 
      * @return array
      */
-    public function signUp(string $email, string $pass, string $name): array {
+    public function signUp(string $email, string $pass, string $name): array
+    {
         $oldUser = $this->getUserByEmail($email);
         if($oldUser) return ['status' => 409, 'id' => null];
 
@@ -90,7 +92,8 @@ class User extends Model
      * 
      * @return array
      */
-    public function changeUserName(string $name, int $id) {
+    public function changeUserName(string $name, int $id): array
+    {
         $user = $this->getUserById($id);
         if(!$user) return ["status" => 404, "msg" => "User doesn't exist"];
         $user->name = $name;
@@ -98,6 +101,64 @@ class User extends Model
 
         if($user->isClean()) return ["status" => 200, "msg" => ""];
         return ["status" => 500, "msg" => "Something goes wrong"];
+    }
+
+    /**
+     *  Change user password
+     *  @param string $oldPass
+     *  @param string $newPass
+     *  @param int $id
+     * 
+     *  @return array
+     */
+    public function changeUserPass(string $oldPass, string $newPass, int $id): array
+    {
+        $user = $this->getUserById($id);
+        if(!$user) return ['status' => 409, 'data' => ['isUpdated' => false, 'msg' => 'User doesn\'t exist']];
+
+        $pass = $this->createPassword($oldPass, $user->paper);
+        if($user->pass === $pass) {
+            $user->pass = $this->createPassword($newPass, $user->paper);
+            $user->save();
+
+            if($user->isClean()) return ["status" => 200, 'data' => ['isUpdated' => true, "msg" => ""]];
+            return ["status" => 500, 'data' => ['isUpdated' => false, "msg" => 'Something goes wrong']];
+        }
+
+        return ['status' => 403, 'data' => ['isUpdated' => false, "msg" => 'Password is not correct']];
+    }
+
+    /**
+     *  Return user public data
+     *  @param int $id
+     * 
+     *  @return array
+     */
+    public function returnUserData(string $id): array
+    {
+        $user = $this->getUserById($id);
+        if(!$user) return ['name' => '', 'email' => '', 'id' => ''];
+
+        return ['name' => $user->name, 'email' => $user->email, 'id' => $user->id];
+    }
+
+    /**
+     *  Return user new pass by user email
+     *  @param string $email
+     * 
+     *  @return array
+     */
+    public function restorePass(string $email): array
+    {
+        $user = $this->getUserByEmail($email);
+        if(!$user) return ['status' => 400, 'data' => ['isUpdated' => false, 'name' => '', 'pass' => '', 'msg' => 'User doesn\'t exist']];
+
+        $newPass = $this->createHashForRecovery($email);
+        $user->pass = $this->createPassword($newPass, $user->paper);
+        $user->save();
+
+        if($user->isClean()) return ['status' => 200, 'data' => ['isUpdated' => true, 'name' => $user->name, 'pass' => $newPass, 'msg' => '']];
+        return ["status" => 500, 'data' => ['isUpdated' => false, 'name' => '', 'pass' => '', 'msg' => 'Something goes wrong']];
     }
 
     /**
@@ -134,6 +195,6 @@ class User extends Model
 
     private function createHashForRecovery(string $email): string {
         $salt = config('auth.salt2');
-        return md5($email.$salt);
+        return substr(md5($email.$salt), 10);
     }
 }
