@@ -38,24 +38,24 @@ services:
       - db
       - fc-auth
 
-  fc-auth:
-    image: "node:18"
-    container_name: fc-auth
-    restart: always
-    working_dir: /home/node/app
-    volumes:
-      - ./auth:/home/node/app
-    links:
-      - db
-    command: npm run start:dev
-    environment:
-      - SALT=${SALT}
-      - SALT2=${SALT2}
-      - APP_NAME=${APP_NAME}
-      - DB_USERNAME=root
-      - DB_PASS=example
-    depends_on:
-      - db
+  # fc-auth:
+  #   image: "node:18"
+  #   container_name: fc-auth
+  #   restart: always
+  #   working_dir: /home/node/app
+  #   volumes:
+  #     - ./auth:/home/node/app
+  #   links:
+  #     - db
+  #   command: npm run start:dev
+  #   environment:
+  #     - SALT=${SALT}
+  #     - SALT2=${SALT2}
+  #     - APP_NAME=${APP_NAME}
+  #     - DB_USERNAME=root
+  #     - DB_PASS=example
+  #   depends_on:
+  #     - db
   
   users:
     image: docker.io/bitnami/laravel:8

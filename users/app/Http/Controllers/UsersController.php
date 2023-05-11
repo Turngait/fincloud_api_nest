@@ -21,10 +21,10 @@ class UsersController extends Controller
         $data = $user->signIn($validatedRequest['email'], $validatedRequest['pass']);
         if($data["status"] === 200) {
             $token = new UserToken;
-            return response()->json(["status" => $data["status"], "data" => ["id" => $data["id"], "token" => $token->addToken($data["id"]), "msg" => ""]]);
+            return response()->json(["status" => $data["status"], "id" => $data["id"], "token" => $token->addToken($data["id"]), "msg" => ""]);
         }
         else {
-            return response()->json(["status" => $data["status"], "data" => ["id" => null, "token" => "", "msg" => "Wrong email or password"]]);
+            return response()->json(["status" => $data["status"], "id" => null, "token" => "", "msg" => "Wrong email or password"]);
         }
     }
 
