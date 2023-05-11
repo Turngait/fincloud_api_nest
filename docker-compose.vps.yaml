@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+
+  nginx:
+    image: nginx:stable-alpine
+    container_name: fc-nginx
+    ports:
+      - "5000:80"
+    volumes:
+      - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - fc-api
+
+  fc-api:
+    image: "node:18"
+    container_name: fc-api
+    working_dir: /home/node/app
+    volumes:
+      - ./app:/home/node/app
+    links:
+      - db
+      - fc-auth
+    command: npm run start
+    environment:
+      - SALT=${SALT}
+      - SALT2=${SALT2}
+      - APP_NAME=${APP_NAME}
+      - API_KEY=${API_KEY}
+      - DB_USERNAME=${DB_USER}
+      - DB_PASS=${DB_PASS}
+    depends_on:
+      - db
+      - fc-auth
+
+  users:
+    image: docker.io/bitnami/laravel:8
+    container_name: users
+    environment:
+      - SALT=${SALT}
+      - SALT2=${SALT2}
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=root
+      - DB_DATABASE=users
+    volumes:
+      - './users:/app'
+    depends_on:
+      - db
+    
+  fc-notify:
+    image: "node:18"
+    container_name: fc-notify
+    working_dir: /home/node/app
+    volumes:
+      - ./notify:/home/node/app
+    command: npm run start
+    environment:
+      - EMAIL_KEY=${EMAIL_KEY}
+      - MAIL_URL=${MAIL_URL}
+
+  db:
+    image: mysql:latest
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes: 
+      - ./db/mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASS}
+
