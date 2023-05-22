@@ -20,7 +20,7 @@ services:
       - ./app:/home/node/app
     links:
       - db
-      - fc-auth
+      - users
     command: npm run start
     environment:
       - SALT=${SALT}
@@ -31,7 +31,7 @@ services:
       - DB_PASS=${DB_PASS}
     depends_on:
       - db
-      - fc-auth
+      - users
 
   users:
     image: docker.io/bitnami/laravel:8

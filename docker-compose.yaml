@@ -21,7 +21,7 @@ services:
       - ./app:/home/node/app
     links:
       - db
-      - fc-auth
+      - users
     command: npm run start:dev
     expose:
       - 5000
@@ -36,7 +36,7 @@ services:
       - DB_PASS=example
     depends_on:
       - db
-      - fc-auth
+      - users
 
   # fc-auth:
   #   image: "node:18"
