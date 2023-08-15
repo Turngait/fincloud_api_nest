@@ -12,22 +12,42 @@ services:
   #   depends_on:
   #     - fc-api
 
+  # fc-api:
+  #   image: "node:18"
+  #   container_name: fc-api
+  #   restart: always
+  #   working_dir: /home/node/app
+  #   volumes:
+  #     - ./app:/home/node/app
+  #   links:
+  #     - db
+  #     - fc-auth
+  #   command: npm run start:dev
+  #   expose:
+  #     - 5000
+  #   ports:
+  #     - "5000:3000"
+  #   environment:
+  #     - SALT=${SALT}
+  #     - SALT2=${SALT2}
+  #     - APP_NAME=${APP_NAME}
+  #     - API_KEY=${API_KEY}
+  #     - DB_USERNAME=root
+  #     - DB_PASS=example
+  #   depends_on:
+  #     - db
+  #     - fc-auth
+
   fc-api:
-    image: "node:18"
-    container_name: fc-api
-    restart: always
-    working_dir: /home/node/app
-    volumes:
-      - ./app:/home/node/app
-    links:
-      - db
-      - fc-auth
-    command: npm run start:dev
-    expose:
-      - 5000
+    build: .
     ports:
-      - "5000:3000"
+      - "5000:5000"
+    volumes:
+      - ./api:/api
+    restart: always
+    container_name: fc-api
     environment:
+      - ENV=DEV
       - SALT=${SALT}
       - SALT2=${SALT2}
       - APP_NAME=${APP_NAME}
