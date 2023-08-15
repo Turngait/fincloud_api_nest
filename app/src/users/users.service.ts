@@ -9,7 +9,7 @@ export class UsersService {
     email: string,
     pass: string,
   ): Promise<{ status: number; token: string; id: number; msg: string }> {
-    const result = await fetch(AUTH_URL + 'api/signin', {
+    const result = await fetch(AUTH_URL + 'users/signin', {
       method: 'POST',
       body: JSON.stringify({ email, pass }),
       headers: { 'Content-Type': 'application/json' },
@@ -18,7 +18,7 @@ export class UsersService {
   }
 
   async signUp(email: string, pass: string, name: string) {
-    const result = await fetch(AUTH_URL + 'api/signup', {
+    const result = await fetch(AUTH_URL + 'users/signup', {
       method: 'POST',
       body: JSON.stringify({ email, pass, name }),
       headers: { 'Content-Type': 'application/json' },
@@ -27,7 +27,7 @@ export class UsersService {
   }
 
   async getUserIdByToken(token: string): Promise<number | null> {
-    const { status, data } = await fetch(AUTH_URL + 'api/getid', {
+    const { status, data } = await fetch(AUTH_URL + 'users/getid', {
       method: 'POST',
       body: JSON.stringify({ token }),
       headers: { 'Content-Type': 'application/json' },
@@ -41,7 +41,7 @@ export class UsersService {
     oldPass: string,
     newPass: string,
   ): Promise<{ status: number; token: string; id: number; msg: string }> {
-    const result = await fetch(AUTH_URL + 'api/changepassword', {
+    const result = await fetch(AUTH_URL + 'users/changepassword', {
       method: 'PUT',
       body: JSON.stringify({ token, oldPass, newPass }),
       headers: { 'Content-Type': 'application/json' },
@@ -52,7 +52,7 @@ export class UsersService {
   async getUserData(
     token: string,
   ): Promise<{ name: string; email: string; id: number }> {
-    const result = await fetch(AUTH_URL + 'api/getdata', {
+    const result = await fetch(AUTH_URL + 'users/getdata', {
       method: 'POST',
       body: JSON.stringify({ token }),
       headers: { 'Content-Type': 'application/json' },
@@ -64,7 +64,7 @@ export class UsersService {
     token: string,
     name: string,
   ): Promise<{ status: number; data: { isUpdated: boolean; msg: string } }> {
-    const result = await fetch(AUTH_URL + 'api/changename', {
+    const result = await fetch(AUTH_URL + 'users/changename', {
       method: 'PUT',
       body: JSON.stringify({ token, name }),
       headers: { 'Content-Type': 'application/json' },
@@ -76,7 +76,7 @@ export class UsersService {
     status: number;
     data: { isUpdated: boolean; pass: string; name: string; msg: string };
   }> {
-    const result = await fetch(AUTH_URL + 'api/restorepass', {
+    const result = await fetch(AUTH_URL + 'users/restorepass', {
       method: 'PUT',
       body: JSON.stringify({ email }),
       headers: { 'Content-Type': 'application/json' },
