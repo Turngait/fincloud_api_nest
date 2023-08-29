@@ -38,14 +38,14 @@ services:
   #     - db
   #     - fc-auth
 
-  fc-api:
+  cmu-api:
     build: .
     ports:
       - "5000:5000"
     volumes:
       - ./api:/api
     restart: always
-    container_name: fc-api
+    container_name: cmu-api
     environment:
       - ENV=DEV
       - SALT=${SALT}
