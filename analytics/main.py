@@ -2,8 +2,7 @@ import paths
 
 # from flask import request
 from app import app
-import users_routes
-import accounts_routes
+import finance_routes
 from dotenv import dotenv_values
 import os
 

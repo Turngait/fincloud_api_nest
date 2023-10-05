@@ -12,42 +12,22 @@ services:
   #   depends_on:
   #     - fc-api
 
-  # fc-api:
-  #   image: "node:18"
-  #   container_name: fc-api
-  #   restart: always
-  #   working_dir: /home/node/app
-  #   volumes:
-  #     - ./app:/home/node/app
-  #   links:
-  #     - db
-  #     - fc-auth
-  #   command: npm run start:dev
-  #   expose:
-  #     - 5000
-  #   ports:
-  #     - "5000:3000"
-  #   environment:
-  #     - SALT=${SALT}
-  #     - SALT2=${SALT2}
-  #     - APP_NAME=${APP_NAME}
-  #     - API_KEY=${API_KEY}
-  #     - DB_USERNAME=root
-  #     - DB_PASS=example
-  #   depends_on:
-  #     - db
-  #     - fc-auth
-
   cmu-api:
-    build: .
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./api:/api
+    image: "node:18"
+    container_name: fc-api
     restart: always
-    container_name: cmu-api
+    working_dir: /home/node/app
+    volumes:
+      - ./app:/home/node/app
+    links:
+      - fc-auth
+      - cmu-analytics
+    command: npm run start:dev
+    expose:
+      - 5000
+    ports:
+      - "5000:3000"
     environment:
-      - ENV=DEV
       - SALT=${SALT}
       - SALT2=${SALT2}
       - APP_NAME=${APP_NAME}
@@ -55,8 +35,29 @@ services:
       - DB_USERNAME=root
       - DB_PASS=example
     depends_on:
-      - db
       - fc-auth
+      - cmu-analytics
+
+  cmu-analytics:
+    build: .
+    volumes:
+      - ./api:/analytics
+    links:
+      - db
+    restart: always
+    container_name: cmu-analytics
+    expose:
+      - 8088
+    ports:
+      - "8088:5000"
+    environment:
+      - ENV=DEV
+      - APP_NAME=${APP_NAME}
+      - API_KEY=${API_KEY}
+      - DB_USERNAME=root
+      - DB_PASS=example
+    depends_on:
+      - db
 
   fc-auth:
     image: "node:18"
@@ -67,6 +68,7 @@ services:
       - ./auth:/home/node/app
     links:
       - db
+      - fc-notify
     command: npm run start:dev
     environment:
       - SALT=${SALT}
@@ -76,6 +78,7 @@ services:
       - DB_PASS=example
     depends_on:
       - db
+      - fc-notify
   
   # users:
   #   image: docker.io/bitnami/laravel:8

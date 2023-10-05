@@ -10,6 +10,6 @@ RUN pip install sqlalchemy
 RUN pip install requests
 RUN pip install python-dotenv
 WORKDIR /api
-COPY api /api
+COPY analytics /api
 
 CMD ["python", "main.py"]
