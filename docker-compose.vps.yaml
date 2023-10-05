@@ -41,8 +41,8 @@ services:
       - SALT2=${SALT2}
       - DB_HOST=db
       - DB_PORT=3306
-      - DB_USERNAME=root
-      - DB_DATABASE=users
+      - DB_USERNAME=${DB_USER}
+      - DB_DATABASE=${DB_PASS}
     volumes:
       - './users:/app'
     depends_on:
