@@ -1,5 +1,6 @@
 /node_modules
-/db
+/db/mysql
+/db/redis/data
 /db_copy
 /config
 npm-debug.log
