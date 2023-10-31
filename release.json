@@ -8,6 +8,11 @@
   ],
   "analytics": [
     {
+      "version": "0.0.2",
+      "date": "31.10.23",
+      "description": "Add get costs by period"
+    },
+    {
       "version": "0.0.1",
       "date": "11.10.23",
       "description": "Created environment"
