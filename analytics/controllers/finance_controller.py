@@ -1,25 +1,22 @@
-from costs_model import Costs
-from incomes_model import Incomes
-from costs_service import CostsService
-from incomes_service import IncomesService
+from services.costs_service import CostsService
+from services.incomes_service import IncomesService
+
 
 class FinanceController:
-    def getFinData(self, user_id, period):
-        costs = Costs.query.filter_by(user_id=user_id, period=period).all()
-        incomes = Incomes.query.filter_by(user_id=user_id, period=period).all()
-        response = {
+    @staticmethod
+    def get_fin_data(user_id: int, period: str, account_id: int) -> dict:
+        return {
             'costs': {
-                'costs': CostsService.normalizeCosts(costs),
-                'groups': [],
+                'costs': CostsService.get_costs(user_id, period, account_id),
+                'groups': CostsService.get_costs_sources(user_id, account_id),
                 'graphData': []
             },
             'incomes': {
-                'incomes': IncomesService.normalizeIncomes(incomes),
-                'sources': [],
+                'incomes': IncomesService.get_incomes(user_id, period, account_id),
+                'sources': IncomesService.get_incomes_sources(user_id, account_id),
                 'incomeGraphData': []
             },
             'budgets': [],
             'accounts': [],
             'targets': []
         }
-        return response
