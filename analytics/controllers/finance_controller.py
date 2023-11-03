@@ -1,5 +1,8 @@
 from services.costs_service import CostsService
 from services.incomes_service import IncomesService
+from services.budgets_service import BudgetsService
+from services.account_service import AccountsService
+from services.targets_service import TargetsService
 
 
 class FinanceController:
@@ -16,7 +19,7 @@ class FinanceController:
                 'sources': IncomesService.get_incomes_sources(user_id, account_id),
                 'incomeGraphData': []
             },
-            'budgets': [],
-            'accounts': [],
-            'targets': []
+            'budgets': BudgetsService.get_budgets(user_id, account_id),
+            'accounts': AccountsService.get_accounts(user_id),
+            'targets': TargetsService.get_targets(user_id, account_id)
         }

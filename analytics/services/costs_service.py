@@ -1,17 +1,16 @@
 from models.costs_model import Costs
 from models.cost_groups_model import CostGroups
+from services.db_service import DBService
 
 
 class CostsService:
     @staticmethod
     def get_costs(user_id: int, period: str, account_id: int) -> list:
-        costs = Costs.query.filter_by(user_id=user_id, period=period, account_id=account_id).all()
-        return CostsService.normalize_costs(costs)
+        return CostsService.normalize_costs(DBService.get_costs_by_period(user_id, period, account_id))
 
     @staticmethod
     def get_costs_sources(user_id: int, account_id: int) -> list:
-        costs_groups = CostGroups.query.filter_by(user_id=user_id, account_id=account_id).all()
-        return CostsService.normalize_costs_group(costs_groups)
+        return CostsService.normalize_costs_group(DBService.get_costs_groups(user_id, account_id))
 
     @staticmethod
     def normalize_costs(costs: list) -> list:

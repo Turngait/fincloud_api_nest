@@ -1,17 +1,17 @@
 from models.incomes_model import Incomes
 from models.income_sources_model import IncomeSources
+from services.db_service import DBService
 
 
 class IncomesService:
     @staticmethod
     def get_incomes(user_id: int, period: str, account_id: int) -> list:
-        incomes = Incomes.query.filter_by(user_id=user_id, period=period, account_id=account_id).all()
-        return IncomesService.normalize_incomes(incomes)
+        return IncomesService.normalize_incomes(DBService.get_incomes_by_period(user_id, period, account_id))
+
 
     @staticmethod
     def get_incomes_sources(user_id: int, account_id: int) -> list:
-        incomes_sources = IncomeSources.query.filter_by(user_id=user_id, account_id=account_id).all()
-        return IncomesService.normalize_incomes_sources(incomes_sources)
+        return IncomesService.normalize_incomes_sources(DBService.get_incomes_sources_by_period(user_id, account_id))
 
     @staticmethod
     def normalize_incomes(incomes: list) -> list:
@@ -61,10 +61,9 @@ class IncomesService:
     @staticmethod
     def get_public_income_source(income_source: IncomeSources) -> dict:
         return {
-          'id': income_source.id,
-          'account_id': income_source.account_id,
-          'title': income_source.title,
-          'description': income_source.description,
-          'order': income_source.order
+            'id': income_source.id,
+            'account_id': income_source.account_id,
+            'title': income_source.title,
+            'description': income_source.description,
+            'order': income_source.order
         }
-
