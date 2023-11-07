@@ -5,7 +5,7 @@ from services.db_service import DBService
 
 class IncomesService:
     @staticmethod
-    def get_incomes(user_id: int, period: str, account_id: int) -> list:
+    def get_incomes(user_id: int, period: str, account_id: int) -> dict:
         return IncomesService.normalize_incomes(DBService.get_incomes_by_period(user_id, period, account_id))
 
 
@@ -14,7 +14,7 @@ class IncomesService:
         return IncomesService.normalize_incomes_sources(DBService.get_incomes_sources_by_period(user_id, account_id))
 
     @staticmethod
-    def normalize_incomes(incomes: list) -> list:
+    def normalize_incomes(incomes: list) -> dict:
         items = []
         gainByPeriod = 0
         periods = set(income.date.isoformat() for income in incomes)
@@ -35,8 +35,8 @@ class IncomesService:
                 'gainByDay': gainByDay,
                 'gainByPeriod': gainByPeriod
             })
-
-        return items
+        graph_data = IncomesService.add_graph_data(incomes)
+        return {'incomes': items, 'graph_data': graph_data}
 
     @staticmethod
     def get_public_income(income: Incomes) -> dict:
@@ -66,4 +66,26 @@ class IncomesService:
             'title': income_source.title,
             'description': income_source.description,
             'order': income_source.order
+        }
+
+    @staticmethod
+    def add_graph_data(incomes: list):
+        graph_amount = []
+        graph_days = []
+        days = set([income.date.isoformat() for income in incomes])
+
+        for day in days:
+            sum_of_costs = 0
+            for income in incomes:
+                day2 = income.date.isoformat()
+                if day == day2:
+                   sum_of_costs += income.amount
+            graph_amount.append(sum_of_costs)
+            graph_days.append(day)
+
+        graph_days.reverse()
+        graph_amount.reverse()
+        return {
+            'days': graph_days,
+            'items': graph_amount,
         }
