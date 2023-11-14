@@ -7,7 +7,7 @@ class RedisClient {
   private static async connectToRedis() {
     try {
       this.redisClient = redis.createClient({
-        url: 'redis://redis:6379',
+        url: 'redis://cmu-redis:6379',
       });
       this.redisClient.on('error', (error: any) =>
         console.error(`Error : ${error}`),
