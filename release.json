@@ -8,6 +8,16 @@
   ],
   "analytics": [
     {
+      "version": "0.0.3",
+      "date": "01.11.23",
+      "description": "Add get cost's groups and income's sources for user"
+    },
+    {
+      "version": "0.0.2",
+      "date": "31.10.23",
+      "description": "Add get costs and incomes by period"
+    },
+    {
       "version": "0.0.1",
       "date": "11.10.23",
       "description": "Created environment"

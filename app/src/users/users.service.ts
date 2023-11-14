@@ -3,6 +3,8 @@ import { AUTH_URL } from 'src/config/api';
 
 import fetch from 'node-fetch';
 
+import RedisClient from 'src/providers/RedisClient';
+
 @Injectable()
 export class UsersService {
   async signIn(
@@ -27,6 +29,18 @@ export class UsersService {
   }
 
   async getUserIdByToken(token: string): Promise<number | null> {
+    const userId = await RedisClient.getValueByKey(token);
+    if (!userId) {
+      const userIdFromAPI = await this.getUserIdByTokenFromAPI(token);
+      console.log(userIdFromAPI);
+      if (userIdFromAPI) RedisClient.setValueByKey(token, userIdFromAPI);
+      return +userIdFromAPI;
+    } else {
+      return +userId;
+    }
+  }
+
+  async getUserIdByTokenFromAPI(token: string): Promise<number | null> {
     const { status, data } = await fetch(AUTH_URL + 'users/getid', {
       method: 'POST',
       body: JSON.stringify({ token }),

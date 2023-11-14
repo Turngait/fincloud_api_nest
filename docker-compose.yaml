@@ -43,7 +43,7 @@ services:
   cmu-analytics:
     build: .
     volumes:
-      - ./api:/analytics
+      - ./analytics:/api
     links:
       - db
     restart: always

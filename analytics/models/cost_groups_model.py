@@ -2,7 +2,7 @@ from app import db
 from datetime import datetime
 
 class CostGroups(db.Model):
-  __tablename__ = 'cost_groups'
+  __tablename__ = 'cost_group'
   id = db.Column(db.Integer, primary_key = True)
   title = db.Column(db.String(length=150), nullable=False)
   description = db.Column(db.Text, nullable=True)
