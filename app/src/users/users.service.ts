@@ -3,6 +3,8 @@ import { AUTH_URL } from 'src/config/api';
 
 import fetch from 'node-fetch';
 
+import RedisClient from 'src/providers/RedisClient';
+
 @Injectable()
 export class UsersService {
   async signIn(
@@ -26,16 +28,28 @@ export class UsersService {
     return result;
   }
 
-  async getUserIdByToken(token: string): Promise<number | null> {
-    const { status, data } = await fetch(AUTH_URL + 'users/getid', {
-      method: 'POST',
-      body: JSON.stringify({ token }),
-      headers: { 'Content-Type': 'application/json' },
-    }).then((res) => res.json());
-    if (status && status === 200) return +data.id;
-    else return null;
+  async getUserIdByToken(token: string): Promise<string | null> {
+    const userId = await RedisClient.getValueByKey(token);
+    if (!userId) {
+      const userIdFromAPI = await this.getUserIDFromAPI(token);
+      if (userIdFromAPI) RedisClient.setValueByKey(token, userIdFromAPI);
+      return userIdFromAPI;
+    } else {
+      return userId;
+    }
   }
 
+  async getUserIDFromAPI(token: string) {
+    const result: { token: string; status: number } = await fetch(
+      AUTH_URL + 'users/getid',
+      {
+        method: 'POST',
+        body: JSON.stringify({ token }),
+        headers: { 'Content-Type': 'application/json' },
+      },
+    ).then((res) => res.json());
+    return result.token;
+  }
   async changeUserPass(
     token: string,
     oldPass: string,
