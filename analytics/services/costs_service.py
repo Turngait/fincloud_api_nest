@@ -45,7 +45,7 @@ class CostsService:
         return {
             'amount': cost.amount,
             'id': cost.id,
-            'group_id ': cost.group_id,
+            'group_id': cost.group_id,
             'account_id': cost.account_id,
             'title': cost.title,
             'year': cost.year,
