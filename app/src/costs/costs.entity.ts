@@ -35,6 +35,6 @@ export default class Cost {
   @Column('bigint')
   account_id: number;
 
-  @Column()
+  @Column({ type: 'real' })
   amount: number;
 }

@@ -76,6 +76,11 @@ export class UsersService {
     }
   }
 
+  async singOut(token: string) {
+    const isDeleted = await this.deleteUserToken(token);
+    return { status: isDeleted ? 200 : 500 };
+  }
+
   async getUserByEmail(email: string) {
     try {
       return await this.userRepository.findOneBy({ email });
@@ -207,6 +212,17 @@ export class UsersService {
       console.log(err);
       log(`From user service: ${err}`, LogLevels.ERROR);
       return null;
+    }
+  }
+
+  async deleteUserToken(token: string): Promise<boolean> {
+    try {
+      await this.userTokensRepository.delete({ token });
+      return true;
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return false;
     }
   }
 }

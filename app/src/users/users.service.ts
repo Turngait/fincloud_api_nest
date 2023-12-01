@@ -97,4 +97,13 @@ export class UsersService {
     }).then((res) => res.json());
     return result;
   }
+
+  async signOut(token: string): Promise<{ status: number }> {
+    const result = await fetch(AUTH_URL + 'users/signout', {
+      method: 'POST',
+      body: JSON.stringify({ token }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    return result;
+  }
 }

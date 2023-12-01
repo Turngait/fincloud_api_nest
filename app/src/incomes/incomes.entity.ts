@@ -35,6 +35,6 @@ export default class Income {
   @Column('bigint')
   account_id: number;
 
-  @Column()
+  @Column({ type: 'real' })
   amount: number;
 }

@@ -54,4 +54,9 @@ export class UsersController {
   async restoreUserPass(@Body() dto: { email: string }) {
     return await this.userService.restorePass(dto.email);
   }
+
+  @Post('signout')
+  async signOut(@Body() dto: { token: string }) {
+    return await this.userService.singOut(dto.token);
+  }
 }

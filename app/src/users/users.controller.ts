@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Put, Res, Headers } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Put,
+  Res,
+  Headers,
+  Delete,
+} from '@nestjs/common';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
 import { CostGroupService } from 'src/cost-group/cost-group.service';
@@ -157,5 +165,21 @@ export class UsersController {
     }
 
     return result;
+  }
+
+  @Post('signout')
+  async signOut(
+    @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    console.log(headers.token);
+    const result = await this.usersService.signOut(headers.token);
+    response.status(result.status);
+    return { status: result.status };
+  }
+
+  @Delete('deleteuser')
+  async deleteUser(@Headers() headers: any) {
+    console.log(headers.token);
   }
 }
