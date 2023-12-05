@@ -77,6 +77,17 @@ export class CostsService {
     }
   }
 
+  async deleteAllCosts(user_id: number): Promise<{ isSuccess: boolean }> {
+    try {
+      await this.costsRepository.delete({ user_id });
+      return { isSuccess: true };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return { isSuccess: false };
+    }
+  }
+
   addGraphData(items) {
     const costs = items.sort((a, b) => {
       if (new Date(a.date) > new Date(b.date)) return -1;

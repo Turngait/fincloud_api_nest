@@ -105,6 +105,17 @@ export class IncomesService {
     }
   }
 
+  async deleteAllIncomes(user_id: number): Promise<{ isSuccess: boolean }> {
+    try {
+      await this.incomeRepository.delete({ user_id });
+      return { isSuccess: true };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return { isSuccess: false };
+    }
+  }
+
   addGraphData(incomes) {
     const items = incomes.sort((a, b) => {
       if (new Date(a.date) > new Date(b.date)) return -1;

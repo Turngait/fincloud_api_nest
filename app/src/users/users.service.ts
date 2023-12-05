@@ -106,4 +106,13 @@ export class UsersService {
     }).then((res) => res.json());
     return result;
   }
+
+  async deleteUser(token: string): Promise<{ status: number; userId: number }> {
+    const result = await fetch(AUTH_URL + 'users/deleteuser', {
+      method: 'DELETE',
+      body: JSON.stringify({ token }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    return result;
+  }
 }
