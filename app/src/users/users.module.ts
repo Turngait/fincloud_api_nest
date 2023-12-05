@@ -10,6 +10,10 @@ import AccountEntity from '../accounts/accounts.entity';
 import BudgetEntity from '../budgets/budgets.entity';
 import CostGroupEntity from '../cost-group/cost-group.entity';
 import IncomeSourceEntity from '../income-source/income-source.entity';
+import IncomesEntity from '../incomes/incomes.entity';
+import CostsEntity from '../costs/costs.entity';
+import { IncomesService } from 'src/incomes/incomes.service';
+import { CostsService } from 'src/costs/costs.service';
 
 @Module({
   imports: [
@@ -18,6 +22,8 @@ import IncomeSourceEntity from '../income-source/income-source.entity';
       BudgetEntity,
       CostGroupEntity,
       IncomeSourceEntity,
+      IncomesEntity,
+      CostsEntity,
     ]),
   ],
   controllers: [UsersController],
@@ -27,6 +33,8 @@ import IncomeSourceEntity from '../income-source/income-source.entity';
     BudgetsService,
     CostGroupService,
     IncomeSourceService,
+    IncomesService,
+    CostsService,
   ],
 })
 export class UsersModule {}

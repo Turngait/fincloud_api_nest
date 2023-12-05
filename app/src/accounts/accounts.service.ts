@@ -84,6 +84,17 @@ export class AccountsService {
     }
   }
 
+  async deleteAllAccounts(user_id: number): Promise<{ isSuccess: boolean }> {
+    try {
+      await this.accountsRepository.delete({ user_id });
+      return { isSuccess: true };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return { isSuccess: false };
+    }
+  }
+
   async changeBalance(
     accountID: number,
     amount: number,

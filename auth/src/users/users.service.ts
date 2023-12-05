@@ -76,6 +76,25 @@ export class UsersService {
     }
   }
 
+  async singOut(token: string) {
+    const isDeleted = await this.deleteUserToken(token);
+    return { status: isDeleted ? 200 : 500 };
+  }
+
+  async deleteUser(token: string) {
+    const response = await this.getUserIdByToken(token);
+    let status = 404;
+    if (!response.data.id) return { status, userId: null };
+
+    const isTokenWasDeleted = await this.deleteAllUserToken(+response.data.id);
+    if (isTokenWasDeleted) {
+      const isUserWasDeleted = await this.deleteUserFromDB(+response.data.id);
+
+      if (isUserWasDeleted) status = 200;
+    }
+    return { status, userId: +response.data.id };
+  }
+
   async getUserByEmail(email: string) {
     try {
       return await this.userRepository.findOneBy({ email });
@@ -207,6 +226,39 @@ export class UsersService {
       console.log(err);
       log(`From user service: ${err}`, LogLevels.ERROR);
       return null;
+    }
+  }
+
+  async deleteUserToken(token: string): Promise<boolean> {
+    try {
+      await this.userTokensRepository.delete({ token });
+      return true;
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return false;
+    }
+  }
+
+  async deleteAllUserToken(user_id: number): Promise<boolean> {
+    try {
+      await this.userTokensRepository.delete({ user_id });
+      return true;
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return false;
+    }
+  }
+
+  async deleteUserFromDB(id: number): Promise<boolean> {
+    try {
+      await this.userRepository.delete({ id });
+      return true;
+    } catch (err) {
+      console.log(err);
+      log(`From user service: ${err}`, LogLevels.ERROR);
+      return false;
     }
   }
 }

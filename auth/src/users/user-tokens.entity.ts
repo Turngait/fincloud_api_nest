@@ -8,7 +8,7 @@ export default class UserTokens {
   @Column({ type: 'bigint' })
   user_id: number;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   token: string;
 
   @Column({ type: 'datetime' })

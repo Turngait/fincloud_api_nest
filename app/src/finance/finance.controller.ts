@@ -6,6 +6,7 @@ import { CostsService } from '../costs/costs.service';
 import { TargetsService } from '../costs/targets/targets.service';
 import { IncomeSourceService } from '../income-source/income-source.service';
 import { IncomesService } from '../incomes/incomes.service';
+import { ANALYST_API } from 'src/config/api';
 
 @Controller('')
 export class FinanceController {
@@ -25,6 +26,22 @@ export class FinanceController {
     @Headers() headers: any,
     @Res({ passthrough: true }) response: any,
   ) {
+    const dataFromApi = await await fetch(ANALYST_API + 'getfindata', {
+      method: 'POST',
+      body: JSON.stringify({
+        user_id: headers.userId,
+        period: dto.period,
+        account_id: dto.accountID,
+      }),
+      headers: { 'Content-Type': 'application/json' },
+    }).then((res) => res.json());
+    if (dataFromApi.isSuccess && dataFromApi.status === 200) {
+      const finData = dataFromApi.data;
+      response.status(dataFromApi.status);
+      return finData;
+    }
+
+    // TODO After full testing cmu-analytics delete code below
     const { costs, graphData } = await this.costsService.getCostsByPeriod(
       dto.period,
       headers.userId,
@@ -57,7 +74,6 @@ export class FinanceController {
     const { data } = await this.targetsService.getAllTargetsForAccount(
       dto.accountID,
     );
-    // this.targetsService.calculateMonthlyTargets(data.targets.month, costs);
     response.status(200);
     return {
       costs: { costs, groups, graphData },

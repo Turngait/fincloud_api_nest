@@ -150,6 +150,17 @@ export class BudgetsService {
     }
   }
 
+  async deleteAllBudgets(user_id: number): Promise<{ isSuccess: boolean }> {
+    try {
+      await this.budgetRepository.delete({ user_id });
+      return { isSuccess: true };
+    } catch (err) {
+      console.log(err);
+      log(`From cost service: ${err}`, LogLevels.ERROR);
+      return { isSuccess: false };
+    }
+  }
+
   async editBudget(newBudget: IBudget): Promise<{
     status: number;
     data: { isUpdated: boolean; msg: string };

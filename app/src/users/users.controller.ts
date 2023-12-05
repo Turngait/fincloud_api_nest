@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Put, Res, Headers } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Put,
+  Res,
+  Headers,
+  Delete,
+} from '@nestjs/common';
 import { AccountsService } from 'src/accounts/accounts.service';
 import { BudgetsService } from 'src/budgets/budgets.service';
 import { CostGroupService } from 'src/cost-group/cost-group.service';
@@ -7,6 +15,8 @@ import { NotifyTypes } from 'src/interfaces/common';
 import { dateToday } from 'src/utils/date';
 import { sendNotificationByMail } from 'src/utils/notify';
 import { UsersService } from './users.service';
+import { IncomesService } from 'src/incomes/incomes.service';
+import { CostsService } from 'src/costs/costs.service';
 
 @Controller('user')
 export class UsersController {
@@ -16,6 +26,8 @@ export class UsersController {
     private readonly budgetService: BudgetsService,
     private readonly costGroupService: CostGroupService,
     private readonly incomeSourceService: IncomeSourceService,
+    private readonly incomesService: IncomesService,
+    private readonly costsService: CostsService,
   ) {}
 
   @Post('signin')
@@ -157,5 +169,47 @@ export class UsersController {
     }
 
     return result;
+  }
+
+  @Post('signout')
+  async signOut(
+    @Body() dto: { token: string },
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.usersService.signOut(dto.token);
+    response.status(result.status);
+    return { status: result.status };
+  }
+
+  @Delete('deleteuser')
+  async deleteUser(
+    @Body() dto: { token: string },
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.usersService.deleteUser(dto.token);
+    let status = 500;
+    const resultFromCosts = await this.costsService.deleteAllCosts(
+      result.userId,
+    );
+    const resultFromIncomes = await this.incomesService.deleteAllIncomes(
+      result.userId,
+    );
+    const resultFromBudgets = await this.accountsService.deleteAllAccounts(
+      result.userId,
+    );
+    const resultFromAccounts = await this.budgetService.deleteAllBudgets(
+      result.userId,
+    );
+    if (
+      result.status === 200 &&
+      resultFromCosts.isSuccess &&
+      resultFromIncomes.isSuccess &&
+      resultFromBudgets.isSuccess &&
+      resultFromAccounts.isSuccess
+    ) {
+      status = 200;
+    }
+    response.status(status);
+    return { status };
   }
 }

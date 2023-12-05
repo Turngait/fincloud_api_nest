@@ -5,6 +5,7 @@ import {
   UsePipes,
   ValidationPipe,
   Put,
+  Delete,
 } from '@nestjs/common';
 import { UserDTO } from './users.dto';
 import { UsersService } from './users.service';
@@ -53,5 +54,15 @@ export class UsersController {
   @Put('/restorepass')
   async restoreUserPass(@Body() dto: { email: string }) {
     return await this.userService.restorePass(dto.email);
+  }
+
+  @Post('signout')
+  async signOut(@Body() dto: { token: string }) {
+    return await this.userService.singOut(dto.token);
+  }
+
+  @Delete('/deleteuser')
+  async deleteUser(@Body() dto: { token: string }) {
+    return await this.userService.deleteUser(dto.token);
   }
 }

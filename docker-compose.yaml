@@ -22,6 +22,7 @@ services:
     links:
       - fc-auth
       - cmu-analytics
+      - cmu-redis
     command: npm run start:dev
     expose:
       - 5000
@@ -37,11 +38,12 @@ services:
     depends_on:
       - fc-auth
       - cmu-analytics
+      - cmu-redis
 
   cmu-analytics:
     build: .
     volumes:
-      - ./api:/analytics
+      - ./analytics:/api
     links:
       - db
     restart: always
@@ -135,3 +137,11 @@ services:
       - db
     ports:
       - 8082:80
+
+  cmu-redis:
+    image: redis
+    container_name: cmu-redis
+    restart: always
+    volumes: 
+      - ./db/redis/data:/data
+      - ./db/redis/etc/redis.conf:/usr/local/etc/redis/redis.conf

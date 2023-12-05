@@ -14,7 +14,7 @@ export default class User {
   @Column('text')
   pass: string;
 
-  @Column('text')
+  @Column({ type: 'text', nullable: true })
   token: string;
 
   @Column('text')

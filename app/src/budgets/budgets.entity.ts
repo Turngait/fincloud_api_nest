@@ -17,7 +17,7 @@ export default class Budget {
   @Column('bigint')
   user_id: number;
 
-  @Column()
+  @Column({ type: 'real' })
   balance: number;
 
   @Column()

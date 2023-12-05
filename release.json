@@ -1,0 +1,60 @@
+{
+  "app": [
+    {
+      "version": "1.3.0",
+      "date": "05.12.23",
+      "description": "Add functionality for deleting all user's information."
+    },
+    {
+      "version": "1.2.0",
+      "date": "01.12.23",
+      "description": "Add signOut method which delete tokens from DB"
+    },
+    {
+      "version": "1.1.0",
+      "date": "11.10.23",
+      "description": "Release"
+    }
+  ],
+  "analytics": [
+    {
+      "version": "0.0.3",
+      "date": "01.11.23",
+      "description": "Add get cost's groups and income's sources for user"
+    },
+    {
+      "version": "0.0.2",
+      "date": "31.10.23",
+      "description": "Add get costs and incomes by period"
+    },
+    {
+      "version": "0.0.1",
+      "date": "11.10.23",
+      "description": "Created environment"
+    }
+  ],
+  "notify": [
+    {
+      "version": "1.0.0",
+      "date": "11.10.23",
+      "description": "Release"
+    }
+  ],
+  "auth": [
+    {
+      "version": "1.2.0",
+      "date": "05.12.23",
+      "description": "Add functionality for deleting all user's information."
+    },
+    {
+      "version": "1.1.0",
+      "date": "01.12.23",
+      "description": "Add signOut method which delete tokens from DB"
+    },
+    {
+      "version": "1.0.0",
+      "date": "11.10.23",
+      "description": "Release"
+    }
+  ]
+}
