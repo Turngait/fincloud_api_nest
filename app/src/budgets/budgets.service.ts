@@ -1,17 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 import BudgetEntity from './budgets.entity';
 import { dateToday } from 'src/utils/date';
 import { IBudget, TypeOfOps } from 'src/interfaces/common';
 import log, { LogLevels } from 'src/logger';
+import { TransferBetweenBudgetsDTO } from './budgets.dto';
 
 @Injectable()
 export class BudgetsService {
   constructor(
     @InjectRepository(BudgetEntity)
     private budgetRepository: Repository<BudgetEntity>,
+    private dataSource: DataSource,
   ) {}
 
   async addBudget(
@@ -186,6 +189,35 @@ export class BudgetsService {
       return {
         status: 500,
         data: { isUpdated: false, msg: err },
+      };
+    }
+  }
+
+  async transferBetweenBudgets(
+    data: TransferBetweenBudgetsDTO,
+  ): Promise<{ status: number }> {
+    try {
+      let budgetData = await this.getBudgetByID(data.from_budget_id);
+      const fromBudget = budgetData.budget;
+      budgetData = await this.getBudgetByID(data.from_budget_id);
+      const toBudget = budgetData.budget;
+
+      if (!fromBudget || !toBudget) return { status: 400 };
+
+      fromBudget.balance = fromBudget.balance - data.amount;
+      toBudget.balance = toBudget.balance - data.amount;
+
+      await this.dataSource.transaction(async () => {
+        await this.budgetRepository.save(fromBudget);
+        await this.budgetRepository.save(toBudget);
+      });
+
+      return { status: 200 };
+    } catch (err) {
+      console.log(err);
+      log(`From budget service: ${err}`, LogLevels.ERROR);
+      return {
+        status: 500,
       };
     }
   }

@@ -2,19 +2,19 @@ version: '3.1'
 
 services:
 
-  # nginx:
-  #   image: nginx:stable-alpine
-  #   container_name: fc-nginx
-  #   ports:
-  #     - "5000:80"
-  #   volumes:
-  #     - ./nginx/nginx.conf.prod:/etc/nginx/conf.d/nginx.conf
-  #   depends_on:
-  #     - fc-api
+  nginx:
+    image: nginx:stable-alpine
+    container_name: cmu-nginx
+    ports:
+      - "5000:80"
+    volumes:
+      - ./nginx/nginx.conf.local:/etc/nginx/conf.d/nginx.conf
+    depends_on:
+      - cmu-api
 
   cmu-api:
     image: "node:18"
-    container_name: fc-api
+    container_name: cmu-api
     restart: always
     working_dir: /home/node/app
     volumes:
@@ -24,10 +24,6 @@ services:
       - cmu-analytics
       - cmu-redis
     command: npm run start:dev
-    expose:
-      - 5000
-    ports:
-      - "5000:3000"
     environment:
       - SALT=${SALT}
       - SALT2=${SALT2}

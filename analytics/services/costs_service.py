@@ -29,7 +29,6 @@ class CostsService:
                     costsInDate.append(CostsService.get_public_cost(cost))
                     spentByDay += cost.amount
                     spentByPeriod += spentByDay
-
             items.append({
                 'period': period,
                 'items': costsInDate,
@@ -38,7 +37,8 @@ class CostsService:
             })
 
         graph_data = CostsService.add_graph_data(costs)
-        return {'costs': items, 'graph_data': graph_data}
+        statistics = CostsService.calculate_month_sum(items)
+        return {'costs': items, 'graph_data': graph_data, 'statistics': statistics}
 
     @staticmethod
     def get_public_cost(cost: Costs) -> dict:
@@ -88,3 +88,13 @@ class CostsService:
             'days': graph_days,
             'items': graph_costs,
         }
+
+    @staticmethod
+    def calculate_month_sum(costs):
+        if not costs:
+            return {'spentByMonth': 0}
+        sum_of_month = 0
+        for cost in costs:
+            sum_of_month += cost['spentByDay']
+
+        return {'spentByMonth': sum_of_month}

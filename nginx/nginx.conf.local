@@ -1,7 +1,7 @@
 server {
   listen 80;
 
-  server_name 194.67.104.32;
+  server_name 127.0.0.1;
 
   location / {
     proxy_pass http://cmu-api:3000/;

@@ -1,10 +1,12 @@
-# FinCloud API
+# CalcMeUp API
 
-This is API for FinCloud project.
+This is API for CalcMeUp project.
 
-This project has two API:
+This project has four API:
 - APP API. it is main API which works with all entities.
 - AUTH API. It is authentication API. It is works only with user's entities. In future it will be as a third-party API.
+- NOTIFY API - Send different notification via email or other services.
+- ANALYST API - Return data from DB.
 
 ## Local project setup
 
@@ -33,6 +35,10 @@ npm install
 
 cd ../auth
 npm install
+
+cd ../notify
+npm install
+
 cd ..
 ```
 
@@ -42,14 +48,17 @@ docker-compose -f docker-compose.db.yaml up
 ```
 
 5. Go to PhpMyAdmin and create two DB - 'fincloud' and 'users'
+For example PhpMyAdmin can be on http://localhost:8082/
 
 6. After stop all containers.
 ```
 docker-compose -f docker-compose.db.yaml down
 ```
 
-7. And start containers in dev mode
+7. Build and start containers in dev mode
 ```
+docker-compose build
+
 docker-compose up
 ```
 
@@ -65,6 +74,6 @@ http://ilya-r.com/
 
 # Releases
 ## Beta
-
-### APP 0.0.8
-- Beta release
+```
+http://cmu.ilya-r.com/
+```

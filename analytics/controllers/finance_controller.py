@@ -14,7 +14,8 @@ class FinanceController:
             'costs': {
                 'costs': costs_data['costs'],
                 'groups': CostsService.get_costs_sources(user_id, account_id),
-                'graphData': costs_data['graph_data']
+                'graphData': costs_data['graph_data'],
+                'statistics': costs_data['statistics']
             },
             'incomes': {
                 'incomes': incomes_date['incomes'],

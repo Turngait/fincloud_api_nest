@@ -43,7 +43,7 @@ class IncomesService:
         return {
             'amount': income.amount,
             'id': income.id,
-            'source_id ': income.source_id,
+            'source_id': income.source_id,
             'account_id': income.account_id,
             'title': income.title,
             'year': income.year,
