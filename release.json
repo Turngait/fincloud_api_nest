@@ -18,6 +18,11 @@
   ],
   "analytics": [
     {
+      "version": "0.1.0",
+      "date": "07.12.23",
+      "description": "Fix several bugs. Beta release."
+    },
+    {
       "version": "0.0.3",
       "date": "01.11.23",
       "description": "Add get cost's groups and income's sources for user"
