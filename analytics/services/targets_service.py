@@ -10,7 +10,10 @@ class TargetsService:
     @staticmethod
     def normalize_targets(targets: list) -> dict:
         if len(targets) < 1:
-            return {}
+            return {
+                'day': [],
+                'month': []
+            }
 
         monthly_targets = [TargetsService.get_public_target(target) for target in targets if target.type == 'month']
         daily_targets = [TargetsService.get_public_target(target) for target in targets if target.type == 'day']

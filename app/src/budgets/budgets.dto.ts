@@ -23,3 +23,17 @@ export class BudgetDTO {
   @IsNumber()
   account_id: number;
 }
+
+export class TransferBetweenBudgetsDTO {
+  @IsNumber()
+  from_budget_id: number;
+
+  @IsNumber()
+  to_budget_id: number;
+
+  @IsNumber()
+  user_id: number;
+
+  @IsNumber()
+  amount: number;
+}

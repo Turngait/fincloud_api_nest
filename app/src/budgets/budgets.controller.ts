@@ -9,7 +9,7 @@ import {
   Put,
   Res,
 } from '@nestjs/common';
-import { BudgetDTO } from './budgets.dto';
+import { BudgetDTO, TransferBetweenBudgetsDTO } from './budgets.dto';
 import { BudgetsService } from './budgets.service';
 
 @Controller('budgets')
@@ -54,5 +54,16 @@ export class BudgetsController {
     const result = await this.budgetService.deleteBudget(dto.budgetId);
     response.status(result.status);
     return result;
+  }
+
+  @Post('transferbetweenbudgets')
+  async transferBetweenBudgets(
+    @Body() dto: { data: TransferBetweenBudgetsDTO },
+    @Headers() headers: any,
+    @Res({ passthrough: true }) response: any,
+  ) {
+    const result = await this.budgetService.transferBetweenBudgets(dto.data);
+    response.status(result.status);
+    return { status: result.status };
   }
 }
