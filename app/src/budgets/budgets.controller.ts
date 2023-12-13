@@ -58,11 +58,11 @@ export class BudgetsController {
 
   @Post('transferbetweenbudgets')
   async transferBetweenBudgets(
-    @Body() dto: { data: TransferBetweenBudgetsDTO },
+    @Body() dto: TransferBetweenBudgetsDTO,
     @Headers() headers: any,
     @Res({ passthrough: true }) response: any,
   ) {
-    const result = await this.budgetService.transferBetweenBudgets(dto.data);
+    const result = await this.budgetService.transferBetweenBudgets(dto);
     response.status(result.status);
     return { status: result.status };
   }
