@@ -199,13 +199,14 @@ export class BudgetsService {
     try {
       let budgetData = await this.getBudgetByID(data.from_budget_id);
       const fromBudget = budgetData.budget;
-      budgetData = await this.getBudgetByID(data.from_budget_id);
+
+      budgetData = await this.getBudgetByID(data.to_budget_id);
       const toBudget = budgetData.budget;
 
       if (!fromBudget || !toBudget) return { status: 400 };
 
       fromBudget.balance = fromBudget.balance - data.amount;
-      toBudget.balance = toBudget.balance - data.amount;
+      toBudget.balance = toBudget.balance + data.amount;
 
       await this.dataSource.transaction(async () => {
         await this.budgetRepository.save(fromBudget);
