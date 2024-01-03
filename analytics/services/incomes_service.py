@@ -16,27 +16,25 @@ class IncomesService:
     @staticmethod
     def normalize_incomes(incomes: list) -> dict:
         items = []
-        gainByPeriod = 0
         periods = set(income.date.isoformat() for income in incomes)
         periods = sorted(periods, reverse=True)
 
         for period in periods:
             gainByDay = 0
-            costsInDate = []
+            incomesInDate = []
             for income in incomes:
                 if income.date.isoformat() == period:
-                    costsInDate.append(IncomesService.get_public_income(income))
+                    incomesInDate.append(IncomesService.get_public_income(income))
                     gainByDay += income.amount
-                    gainByPeriod += gainByDay
 
             items.append({
                 'period': period,
-                'items': costsInDate,
-                'gainByDay': gainByDay,
-                'gainByPeriod': gainByPeriod
+                'items': incomesInDate,
+                'gainByDay': gainByDay
             })
         graph_data = IncomesService.add_graph_data(incomes)
-        return {'incomes': items, 'graph_data': graph_data}
+        statistics = IncomesService.calculate_month_sum(items)
+        return {'incomes': items, 'graph_data': graph_data, 'statistics': statistics}
 
     @staticmethod
     def get_public_income(income: Incomes) -> dict:
@@ -89,3 +87,13 @@ class IncomesService:
             'days': graph_days,
             'items': graph_amount,
         }
+
+    @staticmethod
+    def calculate_month_sum(incomes):
+        if not incomes:
+            return {'spentByMonth': 0}
+        sum_of_month = 0
+        for income in incomes:
+            sum_of_month += income['gainByDay']
+
+        return {'gainByMonth': sum_of_month}

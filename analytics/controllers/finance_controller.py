@@ -20,7 +20,8 @@ class FinanceController:
             'incomes': {
                 'incomes': incomes_date['incomes'],
                 'sources': IncomesService.get_incomes_sources(user_id, account_id),
-                'incomeGraphData': incomes_date['graph_data']
+                'incomeGraphData': incomes_date['graph_data'],
+                'statistics': incomes_date['statistics']
             },
             'budgets': BudgetsService.get_budgets(user_id, account_id),
             'accounts': AccountsService.get_accounts(user_id),
