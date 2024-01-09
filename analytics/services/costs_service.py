@@ -17,7 +17,6 @@ class CostsService:
     @staticmethod
     def normalize_costs(costs: list) -> dict:
         items = []
-        spentByPeriod = 0
         periods = set(cost.date.isoformat() for cost in costs)
         periods = sorted(periods, reverse=True)
 
@@ -28,12 +27,10 @@ class CostsService:
                 if cost.date.isoformat() == period:
                     costsInDate.append(CostsService.get_public_cost(cost))
                     spentByDay += cost.amount
-                    spentByPeriod += spentByDay
             items.append({
                 'period': period,
                 'items': costsInDate,
                 'spentByDay': spentByDay,
-                'spentByThisMonth': spentByPeriod
             })
 
         graph_data = CostsService.add_graph_data(costs)
