@@ -72,6 +72,7 @@ class CostsService:
         graph_costs = []
         graph_days = []
         days = set([cost.date.isoformat() for cost in costs])
+        days = sorted(days, reverse=False)
 
         for day in days:
             sum_of_costs = 0

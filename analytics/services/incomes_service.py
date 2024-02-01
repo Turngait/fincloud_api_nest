@@ -71,6 +71,7 @@ class IncomesService:
         graph_amount = []
         graph_days = []
         days = set([income.date.isoformat() for income in incomes])
+        days = sorted(days, reverse=False)
 
         for day in days:
             sum_of_costs = 0
@@ -81,8 +82,6 @@ class IncomesService:
             graph_amount.append(sum_of_costs)
             graph_days.append(day)
 
-        graph_days.reverse()
-        graph_amount.reverse()
         return {
             'days': graph_days,
             'items': graph_amount,
